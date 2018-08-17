@@ -7,12 +7,12 @@
 ME(bw, dg)
 }
 \arguments{
-\item{bw}{body weight.}
+\item{bw}{body weight (kg).}
 
 \item{dg}{daily gain (kg).}
 }
 \description{
-This function calculate the metabolizable energy for maintain of Hanwoo.
+This function calculate the metabolizable energy for maintain of Hanwoo. ME = MEm + MEg
 }
 \examples{
 ME(bw=150, dg=1)

@@ -12,7 +12,7 @@ MEg(bw, dg)
 \item{dg}{daily gain (kg).}
 }
 \description{
-This function calculate the net energy for growth of Hanwoo.
+This function calculate the net energy for growth of Hanwoo. MEg = NEg/kf
 }
 \examples{
 MEg(bw=150,dg=0.8)

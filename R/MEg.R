@@ -1,6 +1,6 @@
 #' MEg
 #'
-#' This function calculate the net energy for growth of Hanwoo.
+#' This function calculate the net energy for growth of Hanwoo. MEg = NEg/kf
 #' @param bw body weight (kg).
 #' @param dg daily gain (kg).
 #' @keywords Hanwoo
