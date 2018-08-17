@@ -10,7 +10,7 @@ MEm(bw)
 \item{bw}{body weight.}
 }
 \description{
-This function calculate the metabolizable energy for maintain of Hanwoo.
+This function calculate the metabolizable energy for maintain of Hanwoo. MEm = 0.125 * bw^0.75
 }
 \examples{
 MEm(bw=150)

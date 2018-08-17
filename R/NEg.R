@@ -1,6 +1,7 @@
 #' NEg
 #'
-#' This function calculate the net energy for growth of Hanwoo.
+#' This function calculate the net energy for growth of Hanwoo. 
+#' NEg = 0.0533 \* body weight^0.75 \* daily gain (unit=kg)
 #' @param bw body weight (kg).
 #' @param dg daily gain (kg).
 #' @keywords Hanwoo

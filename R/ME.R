@@ -1,7 +1,7 @@
 #' ME
 #'
-#' This function calculate the metabolizable energy for maintain of Hanwoo.
-#' @param bw body weight.
+#' This function calculate the metabolizable energy for maintain of Hanwoo. ME = MEm + MEg
+#' @param bw body weight (kg).
 #' @param dg daily gain (kg).
 #' @keywords Hanwoo
 #' @export

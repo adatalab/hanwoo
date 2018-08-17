@@ -1,6 +1,6 @@
 #' MEm
 #'
-#' This function calculate the metabolizable energy for maintain of Hanwoo.
+#' This function calculate the metabolizable energy for maintain of Hanwoo. MEm = 0.125 * bw^0.75
 #' @param bw body weight.
 #' @keywords Hanwoo
 #' @export
