@@ -1,4 +1,4 @@
-# hanwoo
+# hanwoo <img src="man/figures/logo.png" align="right" />
 A system for modeling the nutrient requirement of Hanwoo.
 
 ## Overview
