@@ -1,0 +1,11 @@
+Package: hanwoo
+Title: A package for Hanwoo data from data.go.kr.
+Version: 0.0.0.9000
+Authors@R: person("Youngjun", "Na", email = "ruminoreticulum@gmail.com", role = c("aut", "cre"))
+Description: A package for Hanwoo data from data.go.kr.
+Depends: R (>= 3.4.0)
+License: GLP-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: XML
