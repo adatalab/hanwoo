@@ -10,7 +10,7 @@ vitD(bw)
 \item{bw}{body weight (kg).}
 }
 \description{
-This function calculate the vitamin A requirement of Hanwoo. Vitamin D = 0.0424 * body weight
+This function calculate the vitamin D requirement of Hanwoo. Vitamin D = 0.0424 * body weight
 }
 \examples{
 vitD(bw=150)
