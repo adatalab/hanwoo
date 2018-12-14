@@ -23,7 +23,6 @@ hanwoo_info <- function(cattle, type = "df") {
   xmltop1 <- xmlRoot(xmlfile1)
   get_inform <- xmlToDataFrame(getNodeSet(xmlfile1, "//item"), stringsAsFactors = FALSE)
 
-
   # import an issueNo
   url2 <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", API_key, sep = "")
   xmlfile2 <- xmlParse(url2)
@@ -45,8 +44,17 @@ hanwoo_info <- function(cattle, type = "df") {
   }
 
   if (type == "df" | type == 2) {
-    df <- cbind(get_inform, get_issueNo, get_hanwoo)
+    
+    cbind.fill <- function(...){
+      nm <- list(...) 
+      nm <- lapply(nm, as.matrix)
+      n <- max(sapply(nm, nrow)) 
+      do.call(cbind, lapply(nm, function (x) 
+        rbind(x, matrix(, n-nrow(x), ncol(x))))) 
+    }
+    
+    df <- cbind.fill(get_inform, get_issueNo, get_hanwoo)  
   }
-
-  return(df)
+  
+    return(df) 
 }
