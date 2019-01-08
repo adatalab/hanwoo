@@ -2,11 +2,13 @@
 #'
 #' This function scraping the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 #' @param cattle Number of cattle you get the inform.
+#' @param type Type for data; list OR df (dataframe).
 #' @keywords Hanwoo
 #' @export
 #' @import XML
 #' @examples
-#' hanwoo_info(cattle="002083191603")
+#' hanwoo_info(cattle = "002083191603", type = "list")
+#' hanwoo_info(cattle = "002083191603", type = "df")
 
 hanwoo_info <- function(cattle, type = "df") {
   if (type == "list" | type == 1) {
