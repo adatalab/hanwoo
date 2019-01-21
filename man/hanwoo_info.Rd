@@ -8,11 +8,14 @@ hanwoo_info(cattle, type = "df")
 }
 \arguments{
 \item{cattle}{Number of cattle you get the inform.}
+
+\item{type}{Type for data; "list" OR "df" (dataframe).}
 }
 \description{
 This function scraping the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 }
 \examples{
-hanwoo_info(cattle="002083191603")
+hanwoo_info(cattle = "002083191603", type = "list")
+hanwoo_info(cattle = "002083191603", type = "df")
 }
 \keyword{Hanwoo}
