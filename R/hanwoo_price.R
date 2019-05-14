@@ -61,32 +61,7 @@ hanwoo_price <- function(date = "", type = "df") {
   }
 
   if (type == "df" | type == 2) {
-    df <- plyr::ldply(result, data.frame)
-
-    num <- c(
-      "totalAuctAmt",
-      "totalAuctCnt",
-      "auct_0aAmt",
-      "auct_0bAmt",
-      "auct_0cAmt",
-      "auct_1aAmt",
-      "auct_1bAmt",
-      "auct_1cAmt",
-      "auct_2aAmt",
-      "auct_2bAmt",
-      "auct_2cAmt",
-      "auct_3aAmt",
-      "auct_3bAmt",
-      "auct_3cAmt",
-      "auct_4aAmt",
-      "auct_4bAmt",
-      "auct_4cAmt",
-      "auct_5dAmt"
-    )
-
-    df[, num] <- as.numeric(as.character(unlist(df[, num])))
-    df$auctDate <- lubridate::ymd(df$auctDate)
-
+    
     order <- c(
       "auctDate",
       "abattCode",
@@ -114,9 +89,37 @@ hanwoo_price <- function(date = "", type = "df") {
       "auct_4cAmt",
       "auct_5dAmt"
     )
+    
+    df <- data.frame(matrix(ncol = 25, nrow = 0))
+    colnames(df) <- order
+    df <- plyr::rbind.fill(df, plyr::ldply(result, data.frame))
+
+    num <- c(
+      "totalAuctAmt",
+      "totalAuctCnt",
+      "auct_0aAmt",
+      "auct_0bAmt",
+      "auct_0cAmt",
+      "auct_1aAmt",
+      "auct_1bAmt",
+      "auct_1cAmt",
+      "auct_2aAmt",
+      "auct_2bAmt",
+      "auct_2cAmt",
+      "auct_3aAmt",
+      "auct_3bAmt",
+      "auct_3cAmt",
+      "auct_4aAmt",
+      "auct_4bAmt",
+      "auct_4cAmt",
+      "auct_5dAmt"
+    )
+
+    df[, num] <- as.numeric(as.character(unlist(df[, num])))
+    df$auctDate <- lubridate::ymd(df$auctDate)
 
     df <- tibble::as_tibble(df)
-    df <- df[order]
+    df <- df[, order]
   }
 
   ## return ----
