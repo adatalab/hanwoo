@@ -12,8 +12,7 @@
 #' @examples
 #' hanwoo_price(date = "", type = "list")
 #' hanwoo_price(date = "20190510", type = "df")
-
-#' @format 
+#' @format
 #' \describe{
 #'   \item{auctDate}{Auction date}
 #'   \item{abattCode}{Market code}
@@ -43,29 +42,81 @@
 #' }
 
 hanwoo_price <- function(date = "", type = "df") {
-  
   code <- c("0905", "1301", "0809", "1005", "0302", "1201", "0202", "0320", "0323", "0714", "0513", "0613", "1101")
-  
-  result <- lapply(code, 
-                FUN = function(x) {
-                  url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct/cattleGrade?ServiceKey=", API_key,"&auctDate=", date, "&abattCd=", x)
-                  xmlfile <- xmlParse(url)
-                  xmltop <- xmlRoot(xmlfile)
-                  get_inform <- xmlToDataFrame(getNodeSet(xmlfile, "//item"), stringsAsFactors = FALSE)
 
-                  return(get_inform)
-                })
-  
+  result <- lapply(code,
+    FUN = function(x) {
+      url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct/cattleGrade?ServiceKey=", API_key, "&auctDate=", date, "&abattCd=", x)
+      xmlfile <- xmlParse(url)
+      xmltop <- xmlRoot(xmlfile)
+      get_inform <- xmlToDataFrame(getNodeSet(xmlfile, "//item"), stringsAsFactors = FALSE)
+
+      return(get_inform)
+    }
+  )
+
   ## fill informs ----
   if (type == "list" | type == 1) {
     df <- result
   }
 
   if (type == "df" | type == 2) {
-    df <- plyr::ldply (result, data.frame)
-    df[,10:25] <- as.numeric(as.character(unlist(df[,c(10:25)])))
+    df <- plyr::ldply(result, data.frame)
+
+    num <- c(
+      "totalAuctAmt",
+      "totalAuctCnt",
+      "auct_0aAmt",
+      "auct_0bAmt",
+      "auct_0cAmt",
+      "auct_1aAmt",
+      "auct_1bAmt",
+      "auct_1cAmt",
+      "auct_2aAmt",
+      "auct_2bAmt",
+      "auct_2cAmt",
+      "auct_3aAmt",
+      "auct_3bAmt",
+      "auct_3cAmt",
+      "auct_4aAmt",
+      "auct_4bAmt",
+      "auct_4cAmt",
+      "auct_5dAmt"
+    )
+
+    df[, num] <- as.numeric(as.character(unlist(df[, num])))
     df$auctDate <- lubridate::ymd(df$auctDate)
+
+    order <- c(
+      "auctDate",
+      "abattCode",
+      "judgeBreedCd",
+      "judgeSexCd",
+      "abattNm",
+      "judgeBreedNm",
+      "judgeSexNm",
+      "totalAuctCnt",
+      "totalAuctAmt",
+      "auct_0aAmt",
+      "auct_0bAmt",
+      "auct_0cAmt",
+      "auct_1aAmt",
+      "auct_1bAmt",
+      "auct_1cAmt",
+      "auct_2aAmt",
+      "auct_2bAmt",
+      "auct_2cAmt",
+      "auct_3aAmt",
+      "auct_3bAmt",
+      "auct_3cAmt",
+      "auct_4aAmt",
+      "auct_4bAmt",
+      "auct_4cAmt",
+      "auct_5dAmt"
+    )
+
     df <- tibble::as_tibble(df)
+    df <- df[order]
   }
 
   ## return ----
