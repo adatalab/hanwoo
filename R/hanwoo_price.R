@@ -6,6 +6,7 @@
 #' @export
 #' @import XML
 #' @import plyr
+#' @import lubridate
 
 #' @examples
 #' hanwoo_price(date = "", type = "list")
@@ -54,7 +55,6 @@ hanwoo_price <- function(date = "", type = "df") {
                   return(get_inform)
                 })
   
-
   ## fill informs ----
   if (type == "list" | type == 1) {
     df <- result
@@ -62,6 +62,8 @@ hanwoo_price <- function(date = "", type = "df") {
 
   if (type == "df" | type == 2) {
     df <- plyr::ldply (result, data.frame)
+    df[,8:25] <- as.numeric(as.character(unlist(df[,8:25])))
+    df$auctDate <- lubridate::ymd(df$auctDate)
   }
 
   ## return ----
