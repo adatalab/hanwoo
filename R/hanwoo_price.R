@@ -7,6 +7,7 @@
 #' @import XML
 #' @import plyr
 #' @import lubridate
+#' @import tibble
 
 #' @examples
 #' hanwoo_price(date = "", type = "list")
@@ -51,7 +52,7 @@ hanwoo_price <- function(date = "", type = "df") {
                   xmlfile <- xmlParse(url)
                   xmltop <- xmlRoot(xmlfile)
                   get_inform <- xmlToDataFrame(getNodeSet(xmlfile, "//item"), stringsAsFactors = FALSE)
-                  
+
                   return(get_inform)
                 })
   
@@ -62,8 +63,9 @@ hanwoo_price <- function(date = "", type = "df") {
 
   if (type == "df" | type == 2) {
     df <- plyr::ldply (result, data.frame)
-    df[,8:25] <- as.numeric(as.character(unlist(df[,8:25])))
+    df[,10:25] <- as.numeric(as.character(unlist(df[,c(10:25)])))
     df$auctDate <- lubridate::ymd(df$auctDate)
+    df <- tibble::as_tibble(df)
   }
 
   ## return ----
