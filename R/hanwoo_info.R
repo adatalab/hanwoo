@@ -1,17 +1,18 @@
 #' hanwoo_info
 #'
-#' This function scraping the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
+#' This function scrap the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 #' @param cattle Number of cattle you get the inform.
 #' @param type Type for data; "list" OR "df" (dataframe).
 #' @keywords Hanwoo
 #' @export
 #' @import XML
+#' @import tibble
 #' @examples
 #' hanwoo_info(cattle = "002083191603", type = "list")
 #' hanwoo_info(cattle = "002083191603", type = "df")
 
 hanwoo_info <- function(cattle, type = "df") {
-  
+
   ## list or dataframe ----
   if (type == "list" | type == 1) {
     df <- list()
@@ -40,12 +41,12 @@ hanwoo_info <- function(cattle, type = "df") {
   xmlfile3 <- xmlParse(url3)
   xmltop3 <- xmlRoot(xmlfile3)
   get_hanwoo <- xmlToDataFrame(getNodeSet(xmlfile3, "//item"), stringsAsFactors = FALSE)
-  
+
   ## fill informs ----
   if (type == "list" | type == 1) {
-    df[[1]] <- get_inform
-    df[[2]] <- get_issueNo
-    df[[3]] <- get_hanwoo
+    df[[1]] <- tibble::as_tibble(get_inform)
+    df[[2]] <- tibble::as_tibble(get_issueNo)
+    df[[3]] <- tibble::as_tibble(get_hanwoo)
   }
 
   if (type == "df" | type == 2) {
@@ -58,11 +59,13 @@ hanwoo_info <- function(cattle, type = "df") {
     }
 
     df <- cbind.fill(get_inform, get_issueNo, get_hanwoo)
+    df <- tibble::as_tibble(df)
   }
 
   ## return ----
   return(
-    tryCatch(df,
+    tryCatch(
+      df,
       error = function(e) NULL
     )
   )
