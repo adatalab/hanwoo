@@ -6,15 +6,14 @@ A system for modeling the nutrient requirement of Hanwoo.
 Overview
 --------
 
-한국가축사양표준(한우)에 따른 동물 영양 모델 및 기계학습 모델을 위한 패키지입니다. 또한 공공데이터포털에서 제공하는 한우의 기본정보, 도체정보 및 KPN 씨수소의 정보를 가져올 수 있습니다.
+한국가축사양표준(한우)에 따른 한우의 영양 모델링을 위한 패키지입니다. 공공데이터포털에서 XML 형태로 제공하는 한우의 기본정보, 도체정보 및 KPN 씨수소의 정보를 R로 importing 해올 수 있습니다.
 
 Installation
 ------------
 
 ```r
-# The development version from GitHub:
-# install.packages("devtools")
-devtools::install_github("adatalab/hanwoo")
+# install.packages("remotes")
+remotes::install_github("adatalab/hanwoo")
 ```
 
 Usage
@@ -24,13 +23,13 @@ Usage
 library(hanwoo)
 ```
 
-### 1. 한우정보 및 도체성적 가져오기
+### 1. 한우 기본 정보 및 도체성적 가져오기
 
 먼저 data.go.kr에서 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다. [다음글](https://youngjunna.github.io/r/animal%20science/2017/12/01/hanwoo-scraping.html)을 참고해 진행하시면 됩니다.
 
 #### hanwoo_key
 
-제일먼저 발급받은 API키를 등록해야 정상적으로 한우의 정보 및 도체정보를 가져올 수 있습니다.
+**반드시 발급받은 API키를 등록해야** 정상적으로 한우의 기본 및 도체 정보를 가져올 수 있습니다.
 
 ```r
 hanwoo_key(key = "YOUR_API_KEY_FROM_DATA.GO.KR")
@@ -47,11 +46,13 @@ hanwoo_info(cattle = "002083191603", type = "df")
 
 #### hanwoo_bull
 
-KPN 한우 씨수소의 정보를 가져올 수 있습니다. API key를 요구하지 않습니다.
+KPN 한우 씨수소의 정보를 가져올 수 있습니다. API key를 요구하지 않습니다. 보증 및 후보씨수소 목록은 농협경제지주 [한우개량사업소](http://www.limc.co.kr/KpnInfo/KpnList.asp)에서 확인하실 수 있습니다.
 
 ```r
 hanwoo_bull(KPN = 1080)
 ```
+
+### 2. 영양소 요구량 설정
 
 Notification
 ------------
