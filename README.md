@@ -20,13 +20,11 @@ devtools::install_github("adatalab/hanwoo")
 Usage
 -----
 
-### 1. 요구량 설정
-
 ```r
 library(hanwoo)
 ```
 
-### 2. 한우정보 및 도체성적 가져오기
+### 1. 한우정보 및 도체성적 가져오기
 
 먼저 data.go.kr에서 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다. [다음글](https://youngjunna.github.io/r/animal%20science/2017/12/01/hanwoo-scraping.html)을 참고해 진행하시면 됩니다.
 
@@ -45,15 +43,6 @@ hanwoo_key(key = "YOUR_API_KEY_FROM_DATA.GO.KR")
 ```r
 hanwoo_info(cattle = "002083191603", type = "list")
 hanwoo_info(cattle = "002083191603", type = "df")
-```
-
-#### hanwoo_price
-
-각 도축장별 실시간 소도체 등급별경매현황정보를 리스트 또는 데이터프레임 형태로 가져올 수 있습니다. 5일 이내의 날짜만 조회가 가능합니다.
-
-```r
-hanwoo_price(date = "", type = "list")
-hanwoo_price(date = "20190510", type = "df")
 ```
 
 #### hanwoo_bull
