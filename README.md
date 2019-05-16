@@ -23,9 +23,40 @@ Usage
 library(hanwoo)
 ```
 
-### 1. 한우 기본 정보 및 도체성적 가져오기
+### 1. 영양소 요구량 설정
 
-먼저 data.go.kr에서 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다. [다음글](https://youngjunna.github.io/r/animal%20science/2017/12/01/hanwoo-scraping.html)을 참고해 진행하시면 됩니다.
+#### req\_\*
+
+체중과 일당증체에 따른 한우의 영양소 요구량을 데이터프레임 형식으로 제공합니다.
+
+```r
+req_steer(bw = 150, dg = 0.8) #거세우의 영양소 요구량
+```
+
+#### steer\_\*
+
+거세우의 개월령/체고/체장/흉위 길이(cm)를 이용해 체중(kg)을 예측하는 모델입니다. `predict` 함수를 이용하여 내장모델을 사용할 수 있습니다.
+
+```r
+predict(
+  steer_h,
+  data.frame(height = 100:140)
+)
+
+predict(
+  steer_c,
+  data.frame(chest = 125:230)
+)
+
+predict(
+  steer_m,
+  data.frame(month = 10:30)
+)
+```
+
+### 2. 한우 기본 정보 및 도체성적 가져오기
+
+먼저 data.go.kr에서 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다.
 
 #### hanwoo_key
 
@@ -50,35 +81,6 @@ KPN 한우 씨수소의 정보를 가져올 수 있습니다. API key를 요구�
 
 ```r
 hanwoo_bull(KPN = 1080)
-```
-
-### 2. 영양소 요구량 설정
-
-#### req_steer
-
-체중과 일당증체에 따른 한우 거세우의 영양소 요구량을 데이터프레임 형식으로 제공합니다.
-```r
-req_steer(bw = 150, dg = 0.8)
-```
-
-#### steer_*
-
-거세우의 개월령/체고/체장/흉위 길이(cm)를 이용해 체중(kg)을 예측하는 모델입니다. `predict` 함수를 이용하여 내장모델을 사용할 수 있습니다.
-```r
-predict(
-  steer_h,
-  data.frame(height = 100:140)
-)
-
-predict(
-  steer_c,
-  data.frame(chest = 125:230)
-)
-
-predict(
-  steer_m,
-  data.frame(month = 10:30)
-)
 ```
 
 Notification
