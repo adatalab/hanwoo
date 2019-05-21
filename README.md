@@ -3,21 +3,19 @@ hanwoo <img src="man/figures/logo.png" align="right" />
 
 A system for modeling the nutrient requirement of Hanwoo.
 
-Overview
---------
+## Overview
 
 한국가축사양표준(한우)에 따른 한우의 영양 모델링을 위한 패키지입니다. 공공데이터포털에서 XML 형태로 제공하는 한우의 기본정보, 도체정보 및 KPN 씨수소의 정보를 R로 importing 해올 수 있습니다.
 
-Installation
-------------
+## Installation
 
 ```r
 # install.packages("remotes")
 remotes::install_github("adatalab/hanwoo")
 ```
 
-Usage
------
+## Usage
+
 
 ```r
 library(hanwoo)
@@ -27,7 +25,7 @@ library(hanwoo)
 
 #### req\_\*
 
-체중과 일당증체에 따른 한우의 영양소 요구량을 데이터프레임 형식으로 제공합니다.
+체중(bw; body weight)과 일당증체(dg; daily gain)에 따른 한우의 영양소 요구량을 데이터프레임 형식으로 제공합니다.
 
 ```r
 req_steer(bw = 150, dg = 0.8) #거세우의 영양소 요구량
@@ -35,7 +33,7 @@ req_steer(bw = 150, dg = 0.8) #거세우의 영양소 요구량
 
 #### steer\_\*
 
-거세우의 개월령/체고/체장/흉위 길이(cm)를 이용해 체중(kg)을 예측하는 모델입니다. `predict` 함수를 이용하여 내장모델을 사용할 수 있습니다.
+거세우의 개월령/체고/체장/흉위 길이(cm)를 이용해 체중(kg)을 예측하는 모델입니다. `stats::predict` 함수를 이용하여 라이브러리에 내장 모델을 사용할 수 있습니다.
 
 ```r
 predict(

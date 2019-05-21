@@ -7,6 +7,7 @@
 #' @export
 #' @import XML
 #' @import tibble
+#' @import lubridate
 #' @examples
 #' hanwoo_info(cattle = "002083191603", type = "list")
 #' hanwoo_info(cattle = "002083191603", type = "df")
@@ -27,6 +28,11 @@ hanwoo_info <- function(cattle, type = "df") {
   xmlfile1 <- xmlParse(url1)
   xmltop1 <- xmlRoot(xmlfile1)
   get_inform <- xmlToDataFrame(getNodeSet(xmlfile1, "//item"), stringsAsFactors = FALSE)
+  
+  get_inform$birthYmd <- lubridate::ymd(get_inform$birthYmd)
+  get_inform$butcheryYmd <- lubridate::ymd(get_inform$butcheryYmd)
+  get_inform$vaccineLastinjectionYmd <- lubridate::ymd(get_inform$vaccineLastinjectionYmd)
+  get_inform$butcheryWeight <- as.integer(get_inform$butcheryWeight)
 
   ## import an issueNo ----
   url2 <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", API_key, sep = "")
@@ -34,13 +40,22 @@ hanwoo_info <- function(cattle, type = "df") {
   xmltop2 <- xmlRoot(xmlfile2)
   get_issueNo <- xmlToDataFrame(getNodeSet(xmlfile2, "//item"), stringsAsFactors = FALSE)
   Issue_No <- gsub(" ", "", as.character(get_issueNo$issueNo)) # OR Issue_No<-stringr::str_trim(as.character(get_issueNo$issueNo))
-
+  
+  get_issueNo$abattDate <- lubridate::ymd(get_issueNo$abattDate)
+  get_issueNo$issueDate <- ymd(get_issueNo$issueDate)
+  get_issueNo$judgeDate <- ymd(get_issueNo$judgeDate)
 
   ## import the carcass characteristics (by using the IssueNo) ----
   url3 <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&ServiceKey=", API_key, sep = "")
   xmlfile3 <- xmlParse(url3)
   xmltop3 <- xmlRoot(xmlfile3)
   get_hanwoo <- xmlToDataFrame(getNodeSet(xmlfile3, "//item"), stringsAsFactors = FALSE)
+  
+  get_hanwoo$abattDate <- ymd(get_issueNo$abattDate)
+  get_hanwoo$issueDate <- ymd(get_hanwoo$issueDate)
+  get_hanwoo$judgeDate <- ymd(get_hanwoo$judgeDate)
+  get_hanwoo$weight <- as.integer(get_hanwoo$weight)
+  get_hanwoo$windex <- as.numeric(get_hanwoo$windex)
 
   ## fill informs ----
   if (type == "list" | type == 1) {
