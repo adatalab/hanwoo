@@ -3,6 +3,7 @@
 export(hanwoo_bull)
 export(hanwoo_info)
 export(hanwoo_key)
+export(req_bull)
 export(req_steer)
 import(XML)
 import(lubridate)

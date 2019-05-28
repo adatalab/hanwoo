@@ -26,7 +26,8 @@ library(hanwoo)
 체중(bw; body weight)과 일당증체(dg; daily gain)에 따른 한우의 영양소 요구량을 데이터프레임 형식으로 제공합니다.
 
 ```r
-req_steer(bw = 150, dg = 0.8) #거세우의 영양소 요구량
+req_steer(bw = 150, dg = 0.8) # 거세우의 영양소 요구량
+req_bull(bw = 200, dg = 1.0) # 거세하지 않은 숫소의 영양소 요구량
 ```
 
 #### steer\_\*
