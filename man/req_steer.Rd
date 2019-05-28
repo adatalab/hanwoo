@@ -3,6 +3,16 @@
 \name{req_steer}
 \alias{req_steer}
 \title{req_steer}
+\format{\describe{
+  \item{BW}{Body weight, kg}
+  \item{ADG}{Avergae daily gain, kg}
+  \item{CP}{Crude protein}
+  \item{ME}{Metabolizable energy}
+  \item{NEg}{Net energy for growth}
+  \item{Ca}{Calcium}
+  \item{P}{Phosphorus}
+  \item{vit}{Vitamin}
+}}
 \usage{
 req_steer(bw, dg)
 }
@@ -15,7 +25,7 @@ req_steer(bw, dg)
 Calculate the nutrient requirement of Hanwoo steer.
 }
 \examples{
-hanwoo_info(bw = 150, dg = 0.8)
+req_steer(bw = 150, dg = 0.8)
 }
 \keyword{Hanwoo}
 \keyword{Nutrient}
