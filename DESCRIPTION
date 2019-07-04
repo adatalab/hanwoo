@@ -1,5 +1,5 @@
 Package: hanwoo
-Title: A System for Modeling the nutrient requirements of Hanwoo.
+Title: A System for Modeling the Nutrient Requirements of Hanwoo
 Version: 0.1.0.9000
 Authors@R: person("Youngjun", "Na", email = "ruminoreticulum@gmail.com", role = c("aut", "cre"))
 Description: A system for modeling the nutrient requirements of Hanwoo.
