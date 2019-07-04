@@ -1,6 +1,6 @@
 Package: hanwoo
-Title: A system for modeling the nutrient requirements of Hanwoo.
-Version: 0.9.1
+Title: A System for Modeling the Nutrient Requirements of Hanwoo
+Version: 0.1.0.9000
 Authors@R: person("Youngjun", "Na", email = "ruminoreticulum@gmail.com", role = c("aut", "cre"))
 Description: A system for modeling the nutrient requirements of Hanwoo.
 Depends: R (>= 3.4.0)
@@ -8,8 +8,12 @@ License: GLP-2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Imports: XML,
+Imports: 
+    XML,
     dplyr,
     lubridate,
     plyr,
     tibble
+Suggests:
+    feed,
+    testthat (>= 2.1.0)

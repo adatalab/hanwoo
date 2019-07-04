@@ -27,6 +27,7 @@ library(hanwoo)
 
 ```r
 req_steer(bw = 150, dg = 0.8) # 거세우의 영양소 요구량
+
 req_bull(bw = 200, dg = 1.0) # 거세하지 않은 숫소의 영양소 요구량
 ```
 
@@ -105,4 +106,6 @@ Notification
 Getting helps
 -------------
 
-Email: ruminoreticulum@gmail.com
+For help or issues using `hanwoo`, please submit a [GitHub issue](https://github.com/adatalab/hanwoo/issues).
+
+For personal communication related to `hanwoo`, please contact Youngjun Na (`ruminoreticulum@gmail.com`).
