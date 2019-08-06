@@ -16,6 +16,6 @@ This function scrap the information of Hanwoo from data.go.kr. Please get your A
 }
 \examples{
 hanwoo_info(cattle = "002083191603", type = "list")
-hanwoo_info(cattle = "002083191603", type = "df")
+hanwoo_info(cattle = "002115280512", type = "df")
 }
 \keyword{Hanwoo}

@@ -10,7 +10,7 @@
 #' @import lubridate
 #' @examples
 #' hanwoo_info(cattle = "002083191603", type = "list")
-#' hanwoo_info(cattle = "002083191603", type = "df")
+#' hanwoo_info(cattle = "002115280512", type = "df")
 
 hanwoo_info <- function(cattle, type = "df") {
 
@@ -28,7 +28,7 @@ hanwoo_info <- function(cattle, type = "df") {
   xmlfile1 <- xmlParse(url1)
   xmltop1 <- xmlRoot(xmlfile1)
   get_inform <- xmlToDataFrame(getNodeSet(xmlfile1, "//item"), stringsAsFactors = FALSE)
-  
+
   get_inform$birthYmd <- lubridate::ymd(get_inform$birthYmd)
   get_inform$butcheryYmd <- lubridate::ymd(get_inform$butcheryYmd)
   get_inform$vaccineLastinjectionYmd <- lubridate::ymd(get_inform$vaccineLastinjectionYmd)
@@ -40,7 +40,7 @@ hanwoo_info <- function(cattle, type = "df") {
   xmltop2 <- xmlRoot(xmlfile2)
   get_issueNo <- xmlToDataFrame(getNodeSet(xmlfile2, "//item"), stringsAsFactors = FALSE)
   Issue_No <- gsub(" ", "", as.character(get_issueNo$issueNo)) # OR Issue_No<-stringr::str_trim(as.character(get_issueNo$issueNo))
-  
+
   get_issueNo$abattDate <- lubridate::ymd(get_issueNo$abattDate)
   get_issueNo$issueDate <- ymd(get_issueNo$issueDate)
   get_issueNo$judgeDate <- ymd(get_issueNo$judgeDate)
@@ -50,7 +50,7 @@ hanwoo_info <- function(cattle, type = "df") {
   xmlfile3 <- xmlParse(url3)
   xmltop3 <- xmlRoot(xmlfile3)
   get_hanwoo <- xmlToDataFrame(getNodeSet(xmlfile3, "//item"), stringsAsFactors = FALSE)
-  
+
   get_hanwoo$abattDate <- ymd(get_issueNo$abattDate)
   get_hanwoo$issueDate <- ymd(get_hanwoo$issueDate)
   get_hanwoo$judgeDate <- ymd(get_hanwoo$judgeDate)
@@ -65,16 +65,16 @@ hanwoo_info <- function(cattle, type = "df") {
   }
 
   if (type == "df" | type == 2) {
-    cbind.fill <- function(...) {
-      nm <- list(...)
-      nm <- lapply(nm, as.matrix)
-      n <- max(sapply(nm, nrow))
-      do.call(cbind, lapply(nm, function(x)
-        rbind(x, matrix(, n - nrow(x), ncol(x)))))
+    if(is.null(get_inform$insfat) == TRUE) {
+      df <- select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
+        mutate(insfat = NA) %>%
+        cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr"))
+    } else {
+      df <- cbind(
+        select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
+        select(get_inform, "insfat", "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")
+      )
     }
-
-    df <- cbind.fill(get_inform, get_issueNo, get_hanwoo)
-    df <- tibble::as_tibble(df)
   }
 
   ## return ----
