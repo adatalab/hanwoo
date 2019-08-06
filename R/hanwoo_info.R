@@ -8,6 +8,7 @@
 #' @import XML
 #' @import tibble
 #' @import lubridate
+#' @import dplyr
 #' @examples
 #' hanwoo_info(cattle = "002083191603", type = "list")
 #' hanwoo_info(cattle = "002115280512", type = "df")
@@ -66,14 +67,20 @@ hanwoo_info <- function(cattle, type = "df") {
 
   if (type == "df" | type == 2) {
     if(is.null(get_inform$insfat) == TRUE) {
-      df <- select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
+      df <- select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
         mutate(insfat = NA) %>%
-        cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr"))
+        cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")) %>%
+        as_tibble()
+
+      df$insfat <- as.numeric(df$insfat)
     } else {
       df <- cbind(
-        select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
+        select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
         select(get_inform, "insfat", "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")
-      )
+      ) %>%
+        as_tibble()
+
+      df$insfat <- as.numeric(df$insfat)
     }
   }
 
