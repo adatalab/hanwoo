@@ -31,7 +31,7 @@ req_steer <- function(bw, dg) {
   MEg <- NEg/kf
   ME <- MEm + MEg
   DE <- ME/0.82
-  TDN <- 4.41*DE
+  TDN <- DE/4.41
 
   # Protein
   CPm <- 5.56 * bw^0.75 # CP for maintanance
@@ -53,8 +53,8 @@ req_steer <- function(bw, dg) {
     BW_kg = bw,
     ADG_kg = dg,
     CP_g = CP,
-    TDN = TDN,
-    DE = DE,
+    TDN_kg = TDN,
+    DE_Mcal = DE,
     ME_Mcal = ME,
     NEg_Mcal = NEg,
     Ca_g = Ca,
