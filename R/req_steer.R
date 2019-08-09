@@ -30,27 +30,31 @@ req_steer <- function(bw, dg) {
   kf <- 0.78 * q + 0.006
   MEg <- NEg/kf
   ME <- MEm + MEg
-  
+  DE <- ME/0.82
+  TDN <- DE/4.41
+
   # Protein
   CPm <- 5.56 * bw^0.75 # CP for maintanance
   NPm <- CPm * 0.51 # Net prot. for maintanance
   RP <- dg * (224.7 - 0.251 * bw) # Retained protein
   NP <- NPm + RP # NP requirement
   CP <- NP / 0.51
-  
+
   # Minerals
   Ca <- (0.0154 * bw + 0.071 * RP + 0.0137 * dg) / 0.5
   P <- (0.0280 * bw + 0.039 * RP + 0.0076 * dg) / 0.85
-  
+
   # Vitamins
   vitA <- 0.0424 * bw
   vitD <- 0.006 * bw
-  
+
   df <- tibble(
     sex = "steer",
-    BW_kg = bw, 
+    BW_kg = bw,
     ADG_kg = dg,
     CP_g = CP,
+    TDN_kg = TDN,
+    DE_Mcal = DE,
     ME_Mcal = ME,
     NEg_Mcal = NEg,
     Ca_g = Ca,
@@ -58,6 +62,6 @@ req_steer <- function(bw, dg) {
     vitA_1000IU = vitA,
     vitD_1000IU = vitD
   )
-  
+
   return(df)
 }
