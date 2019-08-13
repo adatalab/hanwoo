@@ -31,6 +31,24 @@ req_steer(bw = 150, dg = 0.8) # 거세우의 영양소 요구량
 req_bull(bw = 200, dg = 1.0) # 거세하지 않은 숫소의 영양소 요구량
 ```
 
+여러 구간의 요구량을 한번에 importing 해야 할 경우 다음과 같이 응용할 수 있습니다.
+
+```r
+library(purrr)
+library(dplyr)
+
+df <- data.frame(
+  month = 6:15,
+  체중 = c(160, 184, 208, 233, 258, 284, 310, 337, 366, 395),
+  일당증체 = c(0.8, 0.8, 0.8, 0.9, 0.9, 0.9, 0.9, 1, 1, 1)
+)
+
+req <- map2(df$체중, df$일당증체, req_steer)
+
+req %>%
+  map_df(as_tibble)
+```
+
 #### steer\_\*
 
 거세우의 개월령(month), 체고(height), 체장(length) 및 흉위(chest) 길이(cm)를 이용해 체중(kg)을 예측하는 모델입니다. `stats::predict` 함수를 이용하여 라이브러리에 내장 모델을 사용할 수 있습니다.
@@ -96,6 +114,24 @@ KPN 한우 씨수소의 유전정보를 importing 할 수 있습니다. API key�
 
 ```r
 hanwoo_bull(KPN = 1080)
+```
+
+### 3. 내장 데이터셋
+
+#### weight_ku
+
+한우를 대상으로 건국대학교에서 수행한 연구(Na, 2017)의 월령별 체중 raw dataset입니다.
+
+```r
+weight_ku
+```
+
+#### program_nias
+
+한우사양표준에서 제공하는 3단계/4단계 사양 프로그램표 dataset입니다.
+
+```r
+program_nias
 ```
 
 Notification
