@@ -67,18 +67,22 @@ hanwoo_info <- function(cattle, type = "df") {
 
   if (type == "df" | type == 2) {
     if(is.null(get_inform$insfat) == TRUE) {
-      df <- select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
+      df <- select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
         mutate(insfat = NA) %>%
         cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")) %>%
         as_tibble()
 
+      df <- cbind(tibble(cattleNo = cattle), df)
+
       df$insfat <- as.numeric(df$insfat)
     } else {
       df <- cbind(
-        select(get_hanwoo, "cattleNo", "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
+        select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
         select(get_inform, "insfat", "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")
       ) %>%
         as_tibble()
+
+      df <- cbind(tibble(cattleNo = cattle), df)
 
       df$insfat <- as.numeric(df$insfat)
     }
