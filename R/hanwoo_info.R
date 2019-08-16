@@ -15,20 +15,12 @@
 
 hanwoo_info <- function(cattle, type = "df") {
 
-  ## list or dataframe ----
-  if (type == "list" | type == 1) {
-    df <- list()
-  }
-
-  if (type == "df" | type == 2) {
-    df <- data.frame()
-  }
-
   ## import basic informations ----
-  url1 <- paste("http://data.ekape.or.kr/openapi-data/service/user/mtrace/breeding/cattle?cattleNo=", cattle, "&ServiceKey=", API_key, sep = "")
-  xmlfile1 <- xmlParse(url1)
-  xmltop1 <- xmlRoot(xmlfile1)
-  get_inform <- xmlToDataFrame(getNodeSet(xmlfile1, "//item"), stringsAsFactors = FALSE)
+  get_inform <- paste("http://data.ekape.or.kr/openapi-data/service/user/mtrace/breeding/cattle?cattleNo=", cattle, "&ServiceKey=", API_key, sep = "") %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE)
 
   get_inform$birthYmd <- lubridate::ymd(get_inform$birthYmd)
   get_inform$butcheryYmd <- lubridate::ymd(get_inform$butcheryYmd)
@@ -36,55 +28,88 @@ hanwoo_info <- function(cattle, type = "df") {
   get_inform$butcheryWeight <- as.integer(get_inform$butcheryWeight)
 
   ## import an issueNo ----
-  url2 <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", API_key, sep = "")
-  xmlfile2 <- xmlParse(url2)
-  xmltop2 <- xmlRoot(xmlfile2)
-  get_issueNo <- xmlToDataFrame(getNodeSet(xmlfile2, "//item"), stringsAsFactors = FALSE)
-  Issue_No <- gsub(" ", "", as.character(get_issueNo$issueNo)) # OR Issue_No<-stringr::str_trim(as.character(get_issueNo$issueNo))
+  get_issueNo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", API_key, sep = "") %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE)
+
+  Issue_No <- gsub(" ", "", as.character(get_issueNo$issueNo)) # OR Issue_No <- stringr::str_trim(as.character(get_issueNo$issueNo))
 
   get_issueNo$abattDate <- lubridate::ymd(get_issueNo$abattDate)
   get_issueNo$issueDate <- ymd(get_issueNo$issueDate)
   get_issueNo$judgeDate <- ymd(get_issueNo$judgeDate)
 
   ## import the carcass characteristics (by using the IssueNo) ----
-  url3 <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&ServiceKey=", API_key, sep = "")
-  xmlfile3 <- xmlParse(url3)
-  xmltop3 <- xmlRoot(xmlfile3)
-  get_hanwoo <- xmlToDataFrame(getNodeSet(xmlfile3, "//item"), stringsAsFactors = FALSE)
+  get_hanwoo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&ServiceKey=", API_key, sep = "") %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE)
 
-  get_hanwoo$abattDate <- ymd(get_issueNo$abattDate)
-  get_hanwoo$issueDate <- ymd(get_hanwoo$issueDate)
-  get_hanwoo$judgeDate <- ymd(get_hanwoo$judgeDate)
-  get_hanwoo$weight <- as.integer(get_hanwoo$weight)
-  get_hanwoo$windex <- as.numeric(get_hanwoo$windex)
+  if(is.null(get_hanwoo[1,1]) == FALSE){
+    get_hanwoo$abattDate <- ymd(get_issueNo$abattDate)
+    get_hanwoo$issueDate <- ymd(get_hanwoo$issueDate)
+    get_hanwoo$judgeDate <- ymd(get_hanwoo$judgeDate)
+    get_hanwoo$weight <- as.integer(get_hanwoo$weight)
+    get_hanwoo$windex <- as.numeric(get_hanwoo$windex)
+  }
 
   ## fill informs ----
   if (type == "list" | type == 1) {
-    df[[1]] <- tibble::as_tibble(get_inform)
-    df[[2]] <- tibble::as_tibble(get_issueNo)
-    df[[3]] <- tibble::as_tibble(get_hanwoo)
+    df <- list()
+
+    df[[1]] <- as_tibble(get_inform)
+    df[[2]] <- as_tibble(get_issueNo)
+    df[[3]] <- as_tibble(get_hanwoo)
   }
 
   if (type == "df" | type == 2) {
-    if(is.null(get_inform$insfat) == TRUE) {
-      df <- select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
-        mutate(insfat = NA) %>%
-        cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")) %>%
-        as_tibble()
 
-      df <- cbind(tibble(cattleNo = cattle), df)
+    if(is.null(get_hanwoo[1,1]) == FALSE) {
+      ## -insfat ----
+      if(is.null(get_inform$insfat) == TRUE) {
+        df <- select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
+          mutate(insfat = NA) %>%
+          cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr"))
 
-      df$insfat <- as.numeric(df$insfat)
+        df <- cbind(cattleNo = cattle, df) %>% as_tibble()
+      ## +insfat ----
+      } else {
+        df <- cbind(
+          select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
+          select(get_inform, "insfat", "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")
+        )
+
+        df <- cbind(cattleNo = cattle, df) %>% as_tibble()
+        df$insfat <- as.numeric(df$insfat)
+      }
     } else {
-      df <- cbind(
-        select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
-        select(get_inform, "insfat", "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")
-      ) %>%
-        as_tibble()
 
-      df <- cbind(tibble(cattleNo = cattle), df)
+      df <- tibble(
+        judgeBreedNm = as.factor(NA),
+        judgeSexNm = as.factor(NA),
+        abattNm = as.character(NA),
+        gradeNm = as.factor(NA),
+        qgrade = as.factor(NA),
+        wgrade = as.factor(NA),
+        weight = as.numeric(NA),
+        windex = as.numeric(NA),
+        insfat = as.numeric(NA),
+        birthYmd = lubridate::ymd(NA),
+        butcheryYmd = lubridate::ymd(NA),
+        farmNo = as.character(NA),
+        farmNm = as.character(NA),
+        farmAddr = as.character(NA)
+      )
 
-      df$insfat <- as.numeric(df$insfat)
+      df$birthYmd <- get_inform$birthYmd
+      df$butcheryYmd <- get_inform$butcheryYmd
+      df$farmNo <- get_inform$farmNo
+      df$farmNm <- get_inform$farmNm
+      df$farmAddr <- get_inform$farmAddr
+
+      df <- cbind(cattleNo = cattle, df) %>% as_tibble()
     }
   }
 
