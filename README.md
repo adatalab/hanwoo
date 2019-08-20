@@ -1,11 +1,12 @@
 hanwoo <img src="man/figures/logo.png" align="right" />
 =======================================================
 
-A system for modeling the nutrient requirement of Hanwoo.
+A system for modeling the nutrient requirement of *Hanwoo*.
 
 ## Overview
 
-한우의 영양 모델링을 위한 패키지입니다. 한국가축사양표준에 따른 모델링 정보를 제공합니다. 또한 공공데이터포털에서 XML 형태로 제공하는 한우의 기본정보, 도체정보 및 KPN 씨수소의 정보를 R로 importing 해올 수 있습니다.  
+- 한우의 영양 모델링을 위한 패키지입니다. 한국가축사양표준에 따른 모델 정보를 제공합니다. 또한 공공데이터포털에서 XML 형태로 제공하는 한우의 기본정보, 도체정보 및 KPN 씨수소의 정보를 R로 importing 해올 수 있습니다.   
+- 한우는 대한민국의 고유 유전자원으로 혈통/유전적인 정보와 도체성적이 각각 종축개량협회와 축산물품질평가원에서 철저히 관리되고 있습니다. 본 패키지의 목적은 이러한 **유전/환경/영양적인 요소를 모두 고려한** 한우생산모델을 만듦에 있습니다.
 
 ## Installation
 
@@ -133,11 +134,6 @@ weight_ku
 ```r
 program_nias
 ```
-
-Notification
-------------
-
-개발중인 패키지입니다.
 
 Getting helps
 -------------
