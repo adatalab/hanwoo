@@ -11,9 +11,9 @@ RoxygenNote: 6.1.1
 Imports: 
     XML,
     dplyr,
-    lubridate,
     plyr,
-    tibble
+    tibble,
+    lubridate
 Suggests:
     feed,
     testthat (>= 2.1.0)

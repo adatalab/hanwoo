@@ -7,7 +7,7 @@
 #' @export
 #' @import XML
 #' @import tibble
-#' @import lubridate
+#' @importFrom lubridate ymd
 #' @import dplyr
 #' @examples
 #' hanwoo_info(cattle = "002083191603", type = "list")
