@@ -106,7 +106,9 @@ get_hanwoo <- function(x) {
 } 
 
 multiple_result <- lapply(code, FUN = get_hanwoo)
-into_df <- plyr::ldply(multiple_result, data.frame)
+
+multiple_result %>%
+  map_df(as_tibble)
 ```
 
 #### hanwoo_bull
