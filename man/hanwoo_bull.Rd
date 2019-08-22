@@ -4,16 +4,19 @@
 \alias{hanwoo_bull}
 \title{hanwoo_bull}
 \usage{
-hanwoo_bull(KPN)
+hanwoo_bull(KPN, type = "list")
 }
 \arguments{
 \item{KPN}{KPN number of a bull you get the inform.}
+
+\item{type}{"list", "all", or "selected"}
 }
 \description{
 This function scraping the bull information of Hanwoo from data.go.kr.
 }
 \examples{
-hanwoo_bull(KPN=1080)
+hanwoo_bull(KPN = 950)
+hanwoo_bull(KPN = 950, type = "selected")
 }
 \keyword{Hanwoo}
 \keyword{bull}
