@@ -112,7 +112,7 @@ multiple_result %>% map_df(as_tibble)
 
 #### hanwoo_bull
 
-KPN 한우 씨수소의 유전정보를 importing 할 수 있습니다. API key를 요구하지 않습니다. 보증 및 후보씨수소 목록은 농협경제지주 [한우개량사업소](http://www.limc.co.kr/KpnInfo/KpnList.asp)에서 확인하실 수 있습니다.
+KPN 한우 씨수소의 유전정보를 importing 할 수 있습니다. **API key를 요구하지 않습니다**. 보증 및 후보씨수소 목록은 농협경제지주 [한우개량사업소](http://www.limc.co.kr/KpnInfo/KpnList.asp)에서 확인하실 수 있습니다. 한우보증씨수소의 경우 1년에 2회 육종가 평가를 하기 때문에 같은 개체라도 평가 시기에 따라 육종가 다를 수 있습니다.
 
 ```r
 hanwoo_bull(KPN = 1080, type = "list")
@@ -121,6 +121,8 @@ hanwoo_bull(KPN = 950, type = "selected")
 
 여러 KPN 데이터를 importing 해야 할 경우 다음과 같이 응용할 수 있습니다.
 ```r
+kpn <- 600:1100
+
 get_bull <- function(x) {
   return(
     tryCatch(hanwoo_bull(x, type = "selected"), 
@@ -128,8 +130,6 @@ get_bull <- function(x) {
     )
   )
 }
-
-kpn <- 600:1100
 
 result <- map(kpn, get_bull)
 result %>% map_df(as_tibble)
