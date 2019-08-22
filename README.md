@@ -121,12 +121,13 @@ hanwoo_bull(KPN = 1080)
 
 ### 3. 내장 데이터셋
 
-#### weight_ku
+#### weight_ku1 & weight_ku2
 
 한우를 대상으로 건국대학교에서 수행한 연구(Na, 2017)의 월령별 체중 raw dataset입니다.
 
 ```r
-weight_ku
+weight_ku1
+weight_ku2
 ```
 
 #### program_nias

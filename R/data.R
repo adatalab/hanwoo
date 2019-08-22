@@ -3,13 +3,28 @@
 #' This dataset contains a subset of the body weight dataset for
 #' Hanwoo steer in Konkuk University farm.
 #'
-#' @format A data frame with 780 rows and 3 variables
+#' @format A data frame with 96 rows and 4 variables
 #' \describe{
-#'   \item{treat}{diet treatment}
+#'   \item{level}{level of diet treatment (pineapple cannery by-product)}
+#'   \item{animal}{number of animals}
 #'   \item{month}{month of hanwoo steer}
 #'   \item{weight}{Unshrunk body weight of hanwoo steer, kg}
 #' }
-"weight_ku"
+"weight_ku1"
+
+#' Body weight dataset for the Hanwoo steers in KU farm.
+#'
+#' This dataset contains a subset of the body weight dataset for
+#' Hanwoo steer in Konkuk University farm.
+#'
+#' @format A data frame with 780 rows and 4 variables
+#' \describe{
+#'   \item{treat}{diet treatment}
+#'   \item{animal}{number of animals}
+#'   \item{month}{month of hanwoo steer}
+#'   \item{weight}{Unshrunk body weight of hanwoo steer, kg}
+#' }
+"weight_ku2"
 
 #' Nutritional guide program for the Hanwoo steers.
 #'
