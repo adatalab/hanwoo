@@ -14,7 +14,7 @@
 hanwoo_bull <- function(KPN, type = "list") {
 
   # import bull informations ----
-  url1 <- paste("http://hanwoori.nias.go.kr/openapi/brblInfoOk.jsp?dataType=xml&brblNo=","KPN", KPN, sep="")
+  url1 <- paste("http://chuksaro.nias.go.kr/openapi/brblInfoOk.jsp?dataType=xml&brblNo=","KPN", KPN, sep="")
   xmlfile1 <- xmlParse(url1)
   xmltop1 <- xmlRoot(xmlfile1)
   get_inform <- xmlToDataFrame(getNodeSet(xmlfile1, "//item"), stringsAsFactors = FALSE)
