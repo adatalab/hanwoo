@@ -30,7 +30,8 @@ hanwoo_bull <- function(KPN, type = "list") {
     cbind(select(get_inform, SCDR_KPN, BRDR_CRWG, BRDR_BCKF_THCN, BRDR_LN_Y_AR, BRDR_MRSC)) %>%
     as_tibble()
 
-  df[[2]][, -c(1:2)] <- unlist(df[[2]][, -c(1:2)]) %>% as.numeric
+  # df[[2]][, -c(1:2)] <- unlist(df[[2]][, -c(1:2)]) %>% as.numeric
+  df[[2]][, -c(1:2)] <- mutate_all(df[[2]][, -c(1:2)], as.numeric)
 
   colnames(df[[2]]) <- c("kpn", "father", "carcass_weight_kg", "backfat_mm", "longissimus_cm", "marbling")
 
