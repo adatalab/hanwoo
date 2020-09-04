@@ -7,6 +7,7 @@
 #' @export
 #' @import XML
 #' @import dplyr
+#' @import lubridate
 #' @examples
 #' hanwoo_bull(KPN = 950)
 #' hanwoo_bull(KPN = 950, type = "selected")
@@ -22,20 +23,26 @@ hanwoo_bull <- function(KPN, type = "list") {
   # return ----
   df <- list()
 
+  epd <- get_inform %>%
+    select(BRDR_CRWG, BRDR_LN_Y_AR, BRDR_BCKF_THCN, BRDR_MRSC) %>%
+    mutate_all(as.numeric) %>%
+    mutate_all(function(x) {x/2}) %>%
+    as_tibble()
+
   df[[1]] <- tibble(kpn = paste0("KPN", KPN)) %>%
     cbind(get_inform) %>%
     as_tibble()
 
   df[[2]] <- tibble(kpn = paste0("KPN", KPN)) %>%
-    cbind(select(get_inform, SCDR_KPN, BRDR_CRWG, BRDR_BCKF_THCN, BRDR_LN_Y_AR, BRDR_MRSC)) %>%
+    cbind(select(get_inform, SCDR_KPN, SLE_AT_NM, BRBL_SPCHCKN_CODE_NM, BIRTH_DATETM)) %>%
+    mutate(BIRTH_DATETM = lubridate::ymd(BIRTH_DATETM)) %>%
+    cbind(epd) %>%
     as_tibble()
 
-  # df[[2]][, -c(1:2)] <- unlist(df[[2]][, -c(1:2)]) %>% as.numeric
-  df[[2]][, -c(1:2)] <- mutate_all(df[[2]][, -c(1:2)], as.numeric)
 
-  colnames(df[[2]]) <- c("kpn", "father", "carcass_weight_kg", "backfat_mm", "longissimus_cm", "marbling")
+  colnames(df[[2]]) <- c("kpn", "father", "selling", "guarantee", "birthday", "carcass_weight_kg", "longissimus_cm", "backfat_mm", "marbling")
 
-  names(df) <- c("All", "EVB_selected")
+  names(df) <- c("All", "EPD")
 
   if(type == "list") {
     return(df)
