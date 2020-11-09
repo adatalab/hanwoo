@@ -135,6 +135,16 @@ result <- map(kpn, get_bull)
 result %>% map_df(as_tibble)
 ```
 
+#### hanwoo_price
+
+주요 도축장 별로 한육우의 낙찰가를 조회할 수 있습니다. 공공데이터에포탈에서는 최근 1주간의 데이터만 제공됩니다.
+
+```r
+hanwoo_price(date = "", type = "df")
+hanwoo_price(date = "2020-11-10", type = "list")
+```
+
+
 ### 3. 내장 데이터셋
 
 #### weight_ku1 & weight_ku2
