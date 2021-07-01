@@ -41,7 +41,7 @@ hanwoo_info <- function(cattle, type = "df") {
   get_issueNo$judgeDate <- ymd(get_issueNo$judgeDate)
 
   ## import the carcass characteristics (by using the IssueNo) ----
-  get_hanwoo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&ServiceKey=", API_key, sep = "") %>%
+  get_hanwoo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&issueDate=", get_issueNo$issueDate, "&ServiceKey=", API_key, sep = "") %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%
