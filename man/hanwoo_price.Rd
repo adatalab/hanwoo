@@ -31,7 +31,7 @@
   \item{totalAuctCnt}{Mean animal}
 }}
 \usage{
-hanwoo_price(date = "", type = "df")
+hanwoo_price(date = "", type = "df", key = API_key)
 }
 \arguments{
 \item{date}{date you get the inform. e.g. 20190510}

@@ -41,12 +41,12 @@
 #'   \item{totalAuctCnt}{Mean animal}
 #' }
 
-hanwoo_price <- function(date = "", type = "df") {
+hanwoo_price <- function(date = "", type = "df", key = API_key) {
   code <- c("0905", "1301", "0809", "1005", "0302", "1201", "0202", "0320", "0323", "0714", "0513", "0613", "1101")
 
   result <- lapply(code,
     FUN = function(x) {
-      url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct/cattleGrade?ServiceKey=", API_key, "&auctDate=", date, "&abattCd=", x)
+      url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct/cattleGrade?ServiceKey=", key, "&auctDate=", date, "&abattCd=", x)
       xmlfile <- xmlParse(url)
       xmltop <- xmlRoot(xmlfile)
       get_inform <- xmlToDataFrame(getNodeSet(xmlfile, "//item"), stringsAsFactors = FALSE)
@@ -61,7 +61,7 @@ hanwoo_price <- function(date = "", type = "df") {
   }
 
   if (type == "df" | type == 2) {
-    
+
     order <- c(
       "auctDate",
       "abattCode",
@@ -89,7 +89,7 @@ hanwoo_price <- function(date = "", type = "df") {
       "auct_4cAmt",
       "auct_5dAmt"
     )
-    
+
     df <- data.frame(matrix(ncol = 25, nrow = 0))
     colnames(df) <- order
     df <- plyr::rbind.fill(df, plyr::ldply(result, data.frame))
