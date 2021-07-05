@@ -9,6 +9,7 @@
 #' @import tibble
 #' @importFrom lubridate ymd
 #' @import dplyr
+#' @import readr
 #' @examples
 #' hanwoo_info(cattle = "002083191603", type = "list")
 #' hanwoo_info(cattle = "002115280512", type = "df")
@@ -55,6 +56,18 @@ hanwoo_info <- function(cattle, type = "df") {
     get_hanwoo$windex <- as.numeric(get_hanwoo$windex)
   }
 
+  ## import the cattle parts ----
+  get_parts <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattlePart?issueDate=", get_issueNo$issueDate, "&issueNo=", Issue_No, "&weight=280&ServiceKey=", API_key) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE)
+
+  if(is.null(get_parts[1,1]) == FALSE){
+    get_parts$cutmeatRate <- readr::parse_number(get_parts$cutmeatRate)
+    get_parts$cutmeatWeight <- readr::parse_number(get_parts$cutmeatWeight)
+  }
+
   ## fill informs ----
   if (type == "list" | type == 1) {
     df <- list()
@@ -62,6 +75,7 @@ hanwoo_info <- function(cattle, type = "df") {
     df[[1]] <- as_tibble(get_inform)
     df[[2]] <- as_tibble(get_issueNo)
     df[[3]] <- as_tibble(get_hanwoo)
+    df[[4]] <- as_tibble(get_parts)
   }
 
   if (type == "df" | type == 2) {
