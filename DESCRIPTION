@@ -15,5 +15,4 @@ Imports:
     tibble,
     lubridate
 Suggests:
-    feed,
     testthat (>= 2.1.0)
