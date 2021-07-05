@@ -14,10 +14,10 @@
 #' hanwoo_info(cattle = "002083191603", type = "list")
 #' hanwoo_info(cattle = "002115280512", type = "df")
 
-hanwoo_info <- function(cattle, type = "df") {
+hanwoo_info <- function(cattle, type = "df", key = API_key) {
 
   ## import basic informations ----
-  get_inform <- paste("http://data.ekape.or.kr/openapi-data/service/user/mtrace/breeding/cattle?cattleNo=", cattle, "&ServiceKey=", API_key, sep = "") %>%
+  get_inform <- paste("http://data.ekape.or.kr/openapi-data/service/user/mtrace/breeding/cattle?cattleNo=", cattle, "&ServiceKey=", key = API_key, sep = "") %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%
@@ -29,7 +29,7 @@ hanwoo_info <- function(cattle, type = "df") {
   get_inform$butcheryWeight <- as.integer(get_inform$butcheryWeight)
 
   ## import an issueNo ----
-  get_issueNo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", API_key, sep = "") %>%
+  get_issueNo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", key, sep = "") %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%
@@ -42,7 +42,7 @@ hanwoo_info <- function(cattle, type = "df") {
   get_issueNo$judgeDate <- ymd(get_issueNo$judgeDate)
 
   ## import the carcass characteristics (by using the IssueNo) ----
-  get_hanwoo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&issueDate=", get_issueNo$issueDate, "&ServiceKey=", API_key, sep = "") %>%
+  get_hanwoo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&issueDate=", get_issueNo$issueDate, "&ServiceKey=", key, sep = "") %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%
@@ -57,7 +57,7 @@ hanwoo_info <- function(cattle, type = "df") {
   }
 
   ## import the cattle parts ----
-  get_parts <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattlePart?issueDate=", get_issueNo$issueDate, "&issueNo=", Issue_No, "&weight=280&ServiceKey=", API_key) %>%
+  get_parts <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattlePart?issueDate=", get_issueNo$issueDate, "&issueNo=", Issue_No, "&weight=280&ServiceKey=", key) %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%

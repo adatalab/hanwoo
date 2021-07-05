@@ -4,7 +4,7 @@
 \alias{hanwoo_info}
 \title{hanwoo_info}
 \usage{
-hanwoo_info(cattle, type = "df")
+hanwoo_info(cattle, type = "df", key = API_key)
 }
 \arguments{
 \item{cattle}{Number of cattle you get the inform.}
