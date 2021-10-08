@@ -41,12 +41,12 @@
 #'   \item{totalAuctCnt}{Mean animal}
 #' }
 
-hanwoo_price <- function(date = "", type = "df", key = API_key) {
+hanwoo_price <- function(date = "", type = "df", key_encoding) {
   code <- c("0905", "1301", "0809", "1005", "0302", "1201", "0202", "0320", "0323", "0714", "0513", "0613", "1101")
 
   result <- lapply(code,
     FUN = function(x) {
-      url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct/cattleGrade?ServiceKey=", key, "&auctDate=", date, "&abattCd=", x)
+      url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/liveauct/cattleGrade?ServiceKey=", key_encoding, "&auctDate=", date, "&abattCd=", x)
       xmlfile <- xmlParse(url)
       xmltop <- xmlRoot(xmlfile)
       get_inform <- xmlToDataFrame(getNodeSet(xmlfile, "//item"), stringsAsFactors = FALSE)
