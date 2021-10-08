@@ -4,18 +4,20 @@
 \alias{hanwoo_info}
 \title{hanwoo_info}
 \usage{
-hanwoo_info(cattle, type = "df", key = API_key)
+hanwoo_info(cattle, key_encoding, key_decoding)
 }
 \arguments{
 \item{cattle}{Number of cattle you get the inform.}
 
-\item{type}{Type for data; "list" OR "df" (dataframe).}
+\item{key_encoding}{Encoded API key from data.go.kr.}
+
+\item{key_decoding}{Decoded API key from data.go.kr.}
 }
 \description{
 This function scrap the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 }
 \examples{
-hanwoo_info(cattle = "002083191603", type = "list")
-hanwoo_info(cattle = "002115280512", type = "df")
+hanwoo_info(cattle = "002083191603")
+hanwoo_info(cattle = "002115280512")
 }
 \keyword{Hanwoo}

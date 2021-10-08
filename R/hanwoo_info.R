@@ -2,7 +2,8 @@
 #'
 #' This function scrap the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 #' @param cattle Number of cattle you get the inform.
-#' @param type Type for data; "list" OR "df" (dataframe).
+#' @param key_encoding Encoded API key from data.go.kr.
+#' @param key_decoding Decoded API key from data.go.kr.
 #' @keywords Hanwoo
 #' @export
 #' @import XML
@@ -11,126 +12,171 @@
 #' @import dplyr
 #' @import readr
 #' @examples
-#' hanwoo_info(cattle = "002083191603", type = "list")
-#' hanwoo_info(cattle = "002115280512", type = "df")
+#' hanwoo_info(cattle = "002083191603")
+#' hanwoo_info(cattle = "002115280512")
 
-hanwoo_info <- function(cattle, type = "df", key = API_key) {
+hanwoo_info <- function(cattle, key_encoding, key_decoding) {
+  result <- list()
 
-  ## import basic informations ----
-  get_inform <- paste("http://data.ekape.or.kr/openapi-data/service/user/mtrace/breeding/cattle?cattleNo=", cattle, "&ServiceKey=", key = API_key, sep = "") %>%
-    xmlParse() %>%
-    xmlRoot() %>%
-    getNodeSet("//item") %>%
-    xmlToDataFrame(stringsAsFactors = FALSE)
-
-  get_inform$birthYmd <- lubridate::ymd(get_inform$birthYmd)
-  get_inform$butcheryYmd <- lubridate::ymd(get_inform$butcheryYmd)
-  get_inform$vaccineLastinjectionYmd <- lubridate::ymd(get_inform$vaccineLastinjectionYmd)
-  get_inform$butcheryWeight <- as.integer(get_inform$butcheryWeight)
-
-  ## import an issueNo ----
-  get_issueNo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", key, sep = "") %>%
-    xmlParse() %>%
-    xmlRoot() %>%
-    getNodeSet("//item") %>%
-    xmlToDataFrame(stringsAsFactors = FALSE)
-
-  Issue_No <- gsub(" ", "", as.character(get_issueNo$issueNo)) # OR Issue_No <- stringr::str_trim(as.character(get_issueNo$issueNo))
-
-  get_issueNo$abattDate <- lubridate::ymd(get_issueNo$abattDate)
-  get_issueNo$issueDate <- ymd(get_issueNo$issueDate)
-  get_issueNo$judgeDate <- ymd(get_issueNo$judgeDate)
-
-  ## import the carcass characteristics (by using the IssueNo) ----
-  get_hanwoo <- paste("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", Issue_No, "&issueDate=", get_issueNo$issueDate, "&ServiceKey=", key, sep = "") %>%
-    xmlParse() %>%
-    xmlRoot() %>%
-    getNodeSet("//item") %>%
-    xmlToDataFrame(stringsAsFactors = FALSE)
-
-  if(is.null(get_hanwoo[1,1]) == FALSE){
-    get_hanwoo$abattDate <- ymd(get_issueNo$abattDate)
-    get_hanwoo$issueDate <- ymd(get_hanwoo$issueDate)
-    get_hanwoo$judgeDate <- ymd(get_hanwoo$judgeDate)
-    get_hanwoo$weight <- as.integer(get_hanwoo$weight)
-    get_hanwoo$windex <- as.numeric(get_hanwoo$windex)
+  if (is.numeric(cattle) == TRUE) {
+    cattle <- paste0("00", as.character(cattle))
   }
 
-  ## import the cattle parts ----
-  get_parts <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattlePart?issueDate=", get_issueNo$issueDate, "&issueNo=", Issue_No, "&weight=280&ServiceKey=", key) %>%
+  ## 이력정보 ----
+  basic_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 1) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  farm_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 2) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  butchery_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 3) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  process_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 4) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  vaccine_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 5) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  inspect_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 6) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  brucella_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 7) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  lot_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 8) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  seller_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 9) %>%
+    xmlParse() %>%
+    xmlRoot() %>%
+    getNodeSet("//item") %>%
+    xmlToDataFrame(stringsAsFactors = FALSE) %>%
+    as_tibble()
+
+  result$basic_info <- basic_info
+  result$farm_info <- farm_info
+  result$butchery_info <- butchery_info
+  result$process_info <- process_info
+  result$vaccine_info <- vaccine_info
+  result$inspect_info <- inspect_info
+  result$brucella_info <- brucella_info
+  result$lot_info <- lot_info
+  result$seller_info <- seller_info
+
+
+  ## 확인서발급정보 ----
+  get_issueNo <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", key_encoding) %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE)
 
-  if(is.null(get_parts[1,1]) == FALSE){
-    get_parts$cutmeatRate <- readr::parse_number(get_parts$cutmeatRate)
-    get_parts$cutmeatWeight <- readr::parse_number(get_parts$cutmeatWeight)
-  }
+  if (is.null(get_issueNo[1, 1]) == FALSE) {
+    get_issueNo <- get_issueNo %>% as_tibble()
 
-  ## fill informs ----
-  if (type == "list" | type == 1) {
-    df <- list()
+    get_issueNo$abattDate <- lubridate::ymd(get_issueNo$abattDate)
+    get_issueNo$issueDate <- lubridate::ymd(get_issueNo$issueDate)
+    get_issueNo$abattCode <- gsub(" ", "", as.character(get_issueNo$abattCode))
 
-    df[[1]] <- as_tibble(get_inform)
-    df[[2]] <- as_tibble(get_issueNo)
-    df[[3]] <- as_tibble(get_hanwoo)
-    df[[4]] <- as_tibble(get_parts)
-  }
+    result$get_issueNo <- get_issueNo
 
-  if (type == "df" | type == 2) {
 
-    if(is.null(get_hanwoo[1,1]) == FALSE) {
-      ## -insfat ----
-      if(is.null(get_inform$insfat) == TRUE) {
-        df <- select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex") %>%
-          mutate(insfat = NA) %>%
-          cbind(select(get_inform, "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr"))
+    ## 품질정보 ----
+    quality_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", get_issueNo$issueNo[1], "&issueDate=", get_issueNo$issueDate[1], "&ServiceKey=", key_decoding) %>%
+      xmlParse() %>%
+      xmlRoot() %>%
+      getNodeSet("//item") %>%
+      xmlToDataFrame(stringsAsFactors = FALSE) %>%
+      as_tibble()
 
-        df <- cbind(cattleNo = cattle, df) %>% as_tibble()
-      ## +insfat ----
-      } else {
-        df <- cbind(
-          select(get_hanwoo, "judgeBreedNm", "judgeSexNm", "abattNm", "gradeNm", "qgrade", "wgrade", "weight", "windex"),
-          select(get_inform, "insfat", "birthYmd", "butcheryYmd", "farmNo", "farmNm", "farmAddr")
+    if("costAmt" %in% names(quality_info) == TRUE) {
+
+      quality_info <- quality_info %>%
+        select(
+          cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade,
+          costAmt, weight, rea, backfat, insfat, windex,
+          tissue, yuksak, fatsak, growth, everything()
+        ) %>%
+        mutate(
+          abattDate = lubridate::ymd(abattDate),
+          birthmonth = as.numeric(birthmonth),
+          costAmt = as.integer(costAmt),
+          weight = as.integer(weight),
+          rea = as.integer(rea),
+          backfat = as.integer(backfat),
+          insfat = as.integer(insfat),
+          windex = as.numeric(windex),
+          tissue = as.integer(tissue),
+          yuksak = as.integer(yuksak),
+          fatsak = as.integer(fatsak),
+          growth = as.integer(growth)
         )
-
-        df <- cbind(cattleNo = cattle, df) %>% as_tibble()
-        df$insfat <- as.numeric(df$insfat)
-      }
     } else {
 
-      df <- tibble(
-        judgeBreedNm = as.factor(NA),
-        judgeSexNm = as.factor(NA),
-        abattNm = as.character(NA),
-        gradeNm = as.factor(NA),
-        qgrade = as.factor(NA),
-        wgrade = as.factor(NA),
-        weight = as.numeric(NA),
-        windex = as.numeric(NA),
-        insfat = as.numeric(NA),
-        birthYmd = lubridate::ymd(NA),
-        butcheryYmd = lubridate::ymd(NA),
-        farmNo = as.character(NA),
-        farmNm = as.character(NA),
-        farmAddr = as.character(NA)
-      )
+      quality_info <- quality_info %>%
+        select(
+          cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade,
+          weight, rea, backfat, insfat, windex,
+          tissue, yuksak, fatsak, growth, everything()
+        ) %>%
+        mutate(
+          abattDate = lubridate::ymd(abattDate),
+          birthmonth = as.numeric(birthmonth),
+          weight = as.integer(weight),
+          rea = as.integer(rea),
+          backfat = as.integer(backfat),
+          insfat = as.integer(insfat),
+          windex = as.numeric(windex),
+          tissue = as.integer(tissue),
+          yuksak = as.integer(yuksak),
+          fatsak = as.integer(fatsak),
+          growth = as.integer(growth)
+        )
 
-      df$birthYmd <- get_inform$birthYmd
-      df$butcheryYmd <- get_inform$butcheryYmd
-      df$farmNo <- get_inform$farmNo
-      df$farmNm <- get_inform$farmNm
-      df$farmAddr <- get_inform$farmAddr
-
-      df <- cbind(cattleNo = cattle, df) %>% as_tibble()
     }
+
+
+    result$quality_info <- quality_info
   }
+
 
   ## return ----
   return(
     tryCatch(
-      df,
+      result,
       error = function(e) NULL
     )
   )
