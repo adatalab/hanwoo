@@ -73,39 +73,36 @@ predict(
 
 ### 2. 한우 기본 정보 및 도체성적 가져오기
 
-본 함수들을 사용하기 위해서는 먼저 [공공데이터포털](data.go.kr)에서 회원가입 및 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 대한 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다.
-
-#### hanwoo_key
-
-**반드시 발급받은 API키를 등록해야** 정상적으로 한우의 기본 및 도체 정보를 가져올 수 있습니다.
-
-```r
-hanwoo_key(key = "YOUR_API_KEY_FROM_DATA.GO.KR")
-```
+본 함수들을 사용하기 위해서는 먼저 [공공데이터포털](data.go.kr)에서 회원가입 및 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 대한 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다. 발급받은 api key 는 key_encoding 및 key_decoding에 지정해 줍니다.
 
 #### hanwoo_info
 
-특정 한우 개체번호를 입력하여 정보를 리스트 또는 데이터프레임 형태로 가져올 수 있습니다.
+특정 한우 개체번호를 입력하여 정보를 리스트 형태로 가져올 수 있습니다.
 
 ```r
-hanwoo_info(cattle = "002083191603", type = "list")
-hanwoo_info(cattle = "002083191603", type = "df")
+hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
+hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
 ```
 
 여러마리의 데이터를 importing 해야 할 경우 다음과 같이 응용할 수 있습니다.
 
 ```r
-code <- c("002070021011", "002065029272", "002062250044", "002063227367", "002066994812", "002067050894", "002064505530", "002070394423", "002064488463", "002064501114")
+code <- c("002070021011", "002065029272", "002062250044", "002063227367", "002066994812", "002067050894", "002064505530", "002070394423", "002064488463", "002064501114", "002121614931")
 
 get_hanwoo <- function(x) {
   return(
-    tryCatch(hanwoo_info(x, type = "df"), 
-    error = function(e) NULL
+    tryCatch(hanwoo_info(x, key_encoding, key_decoding)$quality_info, 
+             error = function(e) NULL
     )
   )
 } 
 
-multiple_result <- map(code, get_hanwoo)
+library(purrr)
+library(pbapply)
+
+multiple_result <- purrr::map(code, get_hanwoo)
+# OR (for display a progress bar)
+multiple_result <- pbapply::pblapply(code, get_hanwoo)
 
 multiple_result %>% map_df(as_tibble)
 ```
@@ -140,8 +137,8 @@ result %>% map_df(as_tibble)
 주요 도축장 별로 한육우의 낙찰가를 조회할 수 있습니다. 공공데이터에포탈에서는 최근 1주간의 데이터만 제공됩니다.
 
 ```r
-hanwoo_price(date = "", type = "df")
-hanwoo_price(date = "2020-11-10", type = "list")
+hanwoo_price(date = "", type = "df", key_encoding)
+hanwoo_price(date = "2020-11-10", type = "list", key_encoding)
 ```
 
 
