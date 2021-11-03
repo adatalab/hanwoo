@@ -1,3 +1,11 @@
+#' Korean Proven Bull (KPN) dataset.
+#'
+#' This dataset contains a dataset of the Korean Proven Bulls
+#' from National Institute of Animal Science.
+#'
+#' @format A data frame with 1,599 rows and 134 variables
+"hanwoo_kpn"
+
 #' Body weight dataset for the Hanwoo steers in KU farm.
 #'
 #' This dataset contains a subset of the body weight dataset for
