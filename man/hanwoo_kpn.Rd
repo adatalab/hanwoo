@@ -11,5 +11,6 @@ hanwoo_kpn
 \description{
 This dataset contains a dataset of the Korean Proven Bulls
 from National Institute of Animal Science.
+Last updated: 2021-11-03
 }
 \keyword{datasets}

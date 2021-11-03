@@ -2,6 +2,7 @@
 #'
 #' This dataset contains a dataset of the Korean Proven Bulls
 #' from National Institute of Animal Science.
+#' Last updated: 2021-11-03
 #'
 #' @format A data frame with 1,599 rows and 134 variables
 "hanwoo_kpn"
