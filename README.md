@@ -144,6 +144,14 @@ hanwoo_price(date = "2020-11-10", type = "list", key_encoding)
 
 ### 3. 내장 데이터셋
 
+#### hanwoo_kpn
+
+농촌진흥청에서 제공하는 한우 씨수소(Korean Proven Bull) 의 [유전능력평가결과](https://www.nias.go.kr/front/prboardView.do?cmCode=M090814150801285&boardSeqNum=2482) dataset입니다.
+
+```r
+hanwoo_kpn
+```
+
 #### weight_ku1 & weight_ku2
 
 한우를 대상으로 건국대학교에서 수행한 연구(Na, 2017)의 월령별 체중 raw dataset입니다.
