@@ -35,7 +35,8 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble()
+    as_tibble() %>%
+    mutate(cattleNo = cattle)
 
   butchery_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 3) %>%
     xmlParse() %>%
