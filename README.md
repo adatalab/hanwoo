@@ -73,7 +73,7 @@ predict(
 
 ### 2. 한우 기본 정보 및 도체성적 가져오기
 
-본 함수들을 사용하기 위해서는 먼저 [공공데이터포털](data.go.kr)에서 회원가입 및 1) 쇠고기이력정보서비스와 2) 축산물통합이력정보제공에 대한 [활용 신청](https://www.data.go.kr/dataset/15000483/openapi.do)을 통해 API key를 발급받아야합니다. 발급받은 api key 는 key_encoding 및 key_decoding에 지정해 줍니다.
+본 함수들을 사용하기 위해서는 먼저 [공공데이터포털](data.go.kr)에서 회원가입 및 1) 축산물등급판정정보 2) 축산물통합이력정보 3) 축산물경락가격정보 및 4) 축산물등급판정확인서발급정보에 대한 각각의 계정신청 및API key를 발급받아야합니다. 발급받은 api key 는 key_encoding 및 key_decoding에 지정해 줍니다.
 
 #### hanwoo_info
 

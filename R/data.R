@@ -1,3 +1,11 @@
+#' Distribution of average grade of farms in South Korea
+#'
+#' Last updated: 2021-12-08
+#'
+#' @format A list with 3 types of sex (steer, heifer, and cow)
+"hanwoo_farm"
+
+
 #' Korean Proven Bull (KPN) dataset.
 #'
 #' This dataset contains a dataset of the Korean Proven Bulls
