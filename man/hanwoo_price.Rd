@@ -3,7 +3,8 @@
 \name{hanwoo_price}
 \alias{hanwoo_price}
 \title{hanwoo_price}
-\format{\describe{
+\format{
+\describe{
   \item{auctDate}{Auction date}
   \item{abattCode}{Market code}
   \item{judgeBreedCd}{Breed code}
@@ -29,7 +30,8 @@
   \item{auct_5dAmt}{D price}
   \item{totalAuctAmt}{Mean price}
   \item{totalAuctCnt}{Mean animal}
-}}
+}
+}
 \usage{
 hanwoo_price(date = "", type = "df", key_encoding)
 }

@@ -3,7 +3,8 @@
 \name{req_bull}
 \alias{req_bull}
 \title{req_bull}
-\format{\describe{
+\format{
+\describe{
   \item{BW}{Body weight, kg}
   \item{ADG}{Avergae daily gain, kg}
   \item{CP}{Crude protein}
@@ -12,7 +13,8 @@
   \item{Ca}{Calcium}
   \item{P}{Phosphorus}
   \item{vit}{Vitamin}
-}}
+}
+}
 \usage{
 req_bull(bw, dg)
 }

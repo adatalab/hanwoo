@@ -4,7 +4,9 @@
 \name{hanwoo_kpn}
 \alias{hanwoo_kpn}
 \title{Korean Proven Bull (KPN) dataset.}
-\format{A data frame with 1,599 rows and 134 variables}
+\format{
+A data frame with 1,599 rows and 134 variables
+}
 \usage{
 hanwoo_kpn
 }

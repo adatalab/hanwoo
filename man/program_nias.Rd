@@ -4,7 +4,8 @@
 \name{program_nias}
 \alias{program_nias}
 \title{Nutritional guide program for the Hanwoo steers.}
-\format{A data frame with 24 rows and 10 variables
+\format{
+A data frame with 24 rows and 10 variables
 \describe{
   \item{stage3}{3 step program for steer}
   \item{stage4}{4 step program for steer}
@@ -16,7 +17,8 @@
   \item{max.muscle}{Maximum growth stage for muscle}
   \item{max.weight}{Maximum growth stage for body weight}
   \item{max.fat}{Maximum growth stage for intra-muscular fat}
-}}
+}
+}
 \usage{
 program_nias
 }

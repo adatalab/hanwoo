@@ -3,7 +3,8 @@
 \name{req_steer}
 \alias{req_steer}
 \title{req_steer}
-\format{\describe{
+\format{
+\describe{
   \item{BW}{Body weight, kg}
   \item{ADG}{Avergae daily gain, kg}
   \item{CP}{Crude protein}
@@ -12,7 +13,8 @@
   \item{Ca}{Calcium}
   \item{P}{Phosphorus}
   \item{vit}{Vitamin}
-}}
+}
+}
 \usage{
 req_steer(bw, dg)
 }
