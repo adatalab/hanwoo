@@ -4,7 +4,9 @@
 \name{hanwoo_farm}
 \alias{hanwoo_farm}
 \title{Distribution of average grade of farms in South Korea}
-\format{A list with 3 types of sex (steer, heifer, and cow)}
+\format{
+A list with 3 types of sex (steer, heifer, and cow)
+}
 \usage{
 hanwoo_farm
 }

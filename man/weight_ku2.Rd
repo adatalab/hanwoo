@@ -4,13 +4,15 @@
 \name{weight_ku2}
 \alias{weight_ku2}
 \title{Body weight dataset for the Hanwoo steers in KU farm.}
-\format{A data frame with 780 rows and 4 variables
+\format{
+A data frame with 780 rows and 4 variables
 \describe{
   \item{treat}{diet treatment}
   \item{animal}{number of animals}
   \item{month}{month of hanwoo steer}
   \item{weight}{Unshrunk body weight of hanwoo steer, kg}
-}}
+}
+}
 \usage{
 weight_ku2
 }
