@@ -16,7 +16,8 @@ Imports:
     dplyr,
     tibble,
     lubridate,
-    qrcode
+    qrcode,
+    googlesheets4
 Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
