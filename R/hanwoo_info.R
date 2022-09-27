@@ -28,7 +28,10 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble()
+    as_tibble() %>%
+    mutate(
+      birthYmd = ymd(birthYmd)
+    )
 
   farm_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 2) %>%
     xmlParse() %>%
@@ -36,14 +39,19 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble() %>%
-    mutate(cattleNo = cattle)
+    mutate(
+      cattleNo = cattle,
+      regYmd = ymd(regYmd)
+    ) %>%
+    select(cattleNo, everything())
 
   butchery_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 3) %>%
     xmlParse() %>%
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble()
+    as_tibble() %>%
+    mutate(butcheryYmd = ymd(butcheryYmd))
 
   process_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 4) %>%
     xmlParse() %>%
@@ -57,7 +65,8 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble()
+    as_tibble() %>%
+    mutate(injectionYmd = ymd(injectionYmd))
 
   inspect_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 6) %>%
     xmlParse() %>%
@@ -71,7 +80,8 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble()
+    as_tibble() %>%
+    mutate(inspectDt = ymd(inspectDt))
 
   lot_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 8) %>%
     xmlParse() %>%
@@ -121,7 +131,11 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
       xmlRoot() %>%
       getNodeSet("//item") %>%
       xmlToDataFrame(stringsAsFactors = FALSE) %>%
-      as_tibble()
+      as_tibble() %>%
+      mutate(
+        qgrade = factor(qgrade, levels = c("D", "3", "2", "1", "1+", "1++")),
+        issueDate = ymd(issueDate)
+      )
 
     if("costAmt" %in% names(quality_info) == TRUE) {
 
