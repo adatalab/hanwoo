@@ -22,10 +22,10 @@ hanwoo_stock <- function(){
       year = year(date),
       week = isoweek(date),
       wday = wday(date, label = TRUE)
-    ) %>%
-    arrange(desc(date))
+    )
 
-  cat("Data from ekapepia.com; last updated: 2022-09-13 by Youngjun Na")
+  last_date <- max(stock$date)
+  cat(paste0("Data from ekapepia.com; Last updated: ", last_date,  " by Antller Inc."))
   return(stock)
 
 }
