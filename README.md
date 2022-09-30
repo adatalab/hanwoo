@@ -312,7 +312,35 @@ dataset입니다.
 
 ``` r
 weight_ku1
+#> # A tibble: 96 × 4
+#>    level animal month weight
+#>    <dbl> <chr>  <dbl>  <dbl>
+#>  1   0   9171     8     192 
+#>  2   0   1106     8.1   205 
+#>  3   0   5694     7.6   171 
+#>  4   0   4286     8     200 
+#>  5   1.5 7254     7.6   202.
+#>  6   1.5 6103     7.8   217 
+#>  7   1.5 9118     7.8   179 
+#>  8   1.5 6393     7.6   164.
+#>  9   3   2186     8.3   178 
+#> 10   3   9407     7.6   211 
+#> # … with 86 more rows
 weight_ku2
+#> # A tibble: 780 × 4
+#>    treat animal month weight
+#>    <dbl> <chr>  <dbl>  <dbl>
+#>  1     1 4603    8.13    306
+#>  2     1 3831    8.33    281
+#>  3     1 7778    6.07    280
+#>  4     1 4260    8.33    264
+#>  5     1 7502    6.46    258
+#>  6     1 3423    8.07    246
+#>  7     1 4609    7.93    238
+#>  8     1 7940    6.69    233
+#>  9     1 7503    6.49    232
+#> 10     1 7002    6.95    222
+#> # … with 770 more rows
 ```
 
 #### program_nias
@@ -321,7 +349,24 @@ weight_ku2
 
 ``` r
 program_nias
+#> # A tibble: 24 × 10
+#>    stage3      stage4 month weight   adg feed.…¹ max.git max.m…² max.w…³ max.i…⁴
+#>    <chr>       <chr>  <dbl>  <dbl> <dbl> <chr>     <dbl>   <dbl>   <dbl>   <dbl>
+#>  1 growing     growi…     6    160  0.8  6.5           1       0       0       0
+#>  2 growing     growi…     7    184  0.8  7.5           1       0       0       0
+#>  3 growing     growi…     8    208  0.83 8.5           1       0       0       0
+#>  4 growing     growi…     9    233  0.85 9.5           1       0       0       0
+#>  5 growing     growi…    10    258  0.85 10            1       0       0       0
+#>  6 growing     growi…    11    284  0.87 11            1       0       0       0
+#>  7 growing     early…    12    310  0.9  12            1       1       0       0
+#>  8 growing     early…    13    337  0.95 13            0       1       0       0
+#>  9 early-fatt… early…    14    366  0.97 14            0       1       0       0
+#> 10 early-fatt… early…    15    395  1    15            0       1       1       0
+#> # … with 14 more rows, and abbreviated variable names ¹​feed.intake,
+#> #   ²​max.muscle, ³​max.weight, ⁴​max.int.fat
 ```
+
+<img src="man/figures/main.png">
 
 ## Getting helps
 
