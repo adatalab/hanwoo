@@ -195,7 +195,7 @@ tail(hanwoo_kpn)
 
 한우를 대상으로 건국대학교에서 수행한 연구(Na, 2017)의 월령별 체중 raw dataset입니다.
 
-```r
+```{r}
 weight_ku1
 weight_ku2
 ```
@@ -204,9 +204,11 @@ weight_ku2
 
 한우사양표준에서 제공하는 3단계/4단계 사양 프로그램표 dataset입니다.
 
-```r
+```{r}
 program_nias
 ```
+
+<img src="man/figures/main.png">
 
 Getting helps
 -------------
