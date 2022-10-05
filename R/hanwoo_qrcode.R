@@ -16,9 +16,10 @@ hanwoo_qrcode <- function(cattle, site = "mtrace") {
   }
 
   if(site == "aiak") {
-    url <- paste0("https://aiak.or.kr/ka_hims/ka_s102.jsp?type=barcode&var=", cattle)
+    url <- paste0("https://aiak.or.kr/ka_hims/hims_02.jsp?type=barcode&var=", cattle)
   }
 
   code <- qr_code(url)
   return(plot(code))
 }
+
