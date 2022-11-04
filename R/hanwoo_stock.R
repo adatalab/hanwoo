@@ -6,23 +6,36 @@
 #' @import googlesheets4
 #' @import lubridate
 #' @import tibble
-
 #' @examples
 #' hanwoo_stock()
 
 
 
-hanwoo_stock <- function(){
+hanwoo_stock <- function(by = "summary"){
 
   url <- "https://docs.google.com/spreadsheets/d/1baViBjPUz1wyicG-I-vN5RhyoCcFt-6lw550evTowEg/edit?usp=sharing"
 
-  stock <- read_sheet(url) %>%
-    mutate(
-      date = ymd(date),
-      year = year(date),
-      week = isoweek(date),
-      wday = wday(date, label = TRUE)
-    )
+  # summary data
+  if(by == "summary" | by == 1) {
+    stock <- read_sheet(url, sheet = 1) %>%
+      mutate(
+        date = ymd(date),
+        year = year(date),
+        week = isoweek(date),
+        wday = wday(date, label = TRUE)
+      )
+  }
+
+  # 1++ 근내지방도 별 성적
+  if(by == "789" | by == 2) {
+    stock <- read_sheet(url, sheet = 2) %>%
+      mutate(
+        date = ymd(date),
+        year = year(date),
+        week = isoweek(date),
+        wday = wday(date, label = TRUE)
+      )
+  }
 
   last_date <- max(stock$date)
   cat(paste0("Data from ekapepia.com; Last updated: ", last_date,  " by Antller Inc."))
