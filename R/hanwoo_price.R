@@ -5,7 +5,6 @@
 #' @keywords Hanwoo
 #' @export
 #' @import XML
-#' @import plyr
 #' @import lubridate
 #' @import tibble
 
@@ -90,9 +89,10 @@ hanwoo_price <- function(date = "", type = "df", key_encoding) {
       "auct_5dAmt"
     )
 
-    df <- data.frame(matrix(ncol = 25, nrow = 0))
-    colnames(df) <- order
-    df <- plyr::rbind.fill(df, plyr::ldply(result, data.frame))
+    # df <- data.frame(matrix(ncol = 25, nrow = 0))
+    # colnames(df) <- order
+    # df <- plyr::rbind.fill(df, plyr::ldply(result, data.frame)) %>% as_tibble()
+    df <- as_tibble(bind_rows(result))
 
     num <- c(
       "totalAuctAmt",

@@ -12,7 +12,6 @@ Imports:
     XML,
     httr,
     readr,
-    plyr,
     dplyr,
     tibble,
     lubridate,
