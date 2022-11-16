@@ -26,15 +26,13 @@ hanwoo_stock <- function(by = "summary"){
       )
   }
 
-  # 1++ 근내지방도 별 성적
-  if(by == "789" | by == 2) {
+  # 배합사료가격
+  if(by == "feed" | by == 2) {
     stock <- read_sheet(url, sheet = 2) %>%
       mutate(
-        date = ymd(date),
-        year = year(date),
-        week = isoweek(date),
-        wday = wday(date, label = TRUE)
-      )
+        date = ymd(paste0(연도, "-", 월,"-01"))
+      ) %>%
+      select(date, everything())
   }
 
   last_date <- max(stock$date)
