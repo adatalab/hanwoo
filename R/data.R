@@ -64,3 +64,14 @@
 #'   \item{max.fat}{Maximum growth stage for intra-muscular fat}
 #' }
 "program_nias"
+
+
+
+
+
+#' Lunar Calendar of Korea.
+#'
+#' This dataset contains a subset of the Lunar calendar of Korea.
+#'
+#' @format A data frame with 241,027 rows and 11 variables
+"Kcalendar"
