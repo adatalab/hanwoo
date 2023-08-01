@@ -17,7 +17,7 @@ hanwoo_info(cattle, key_encoding, key_decoding)
 This function scrap the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 }
 \examples{
-hanwoo_info(cattle = "002083191603")
-hanwoo_info(cattle = "002115280512")
+hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
+hanwoo_info(cattle = "002115280512", key_encoding, key_decoding)
 }
 \keyword{Hanwoo}
