@@ -80,8 +80,12 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble() %>%
-    mutate(inspectDt = ymd(inspectDt))
+    as_tibble()
+
+  if("inspectDt" %in% colnames(brucella_info)) {
+    brucella_info <- mutate(inspectDt = ymd(inspectDt))
+  }
+
 
   lot_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 8) %>%
     xmlParse() %>%
