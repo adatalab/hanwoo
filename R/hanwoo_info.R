@@ -83,7 +83,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     as_tibble()
 
   if("inspectDt" %in% colnames(brucella_info)) {
-    brucella_info <- mutate(inspectDt = ymd(inspectDt))
+    brucella_info <- brucella_info %>% mutate(inspectDt = ymd(inspectDt))
   }
 
 
