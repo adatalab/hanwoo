@@ -18,14 +18,26 @@
 hanwoo_info <- function(cattle, key_encoding, key_decoding) {
   result <- list()
 
-  if (is.numeric(cattle) == TRUE) {
+  # check the nchar of cattle number ----
+  if (nchar(cattle) == 10) {
     cattle <- paste0("00", as.character(cattle))
   }
 
-  ## 이력정보 ----
+  if (nchar(cattle) == 9) {
+    cattle <- paste0("000", as.character(cattle))
+  }
+
+  # check the api error msg ----
   basic_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 1) %>%
     xmlParse() %>%
-    xmlRoot() %>%
+    xmlRoot()
+
+  if(xmlToDataFrame(basic_info)$resultCode[1] == 99) {
+    return(xmlToDataFrame(basic_info)$resultMsg[1])
+  }
+
+  ## 이력정보 ----
+  basic_info <- basic_info %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble() %>%
@@ -101,6 +113,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
+  # assign the traceability results into list ----
   result$basic_info <- basic_info
   result$farm_info <- farm_info
   result$butchery_info <- butchery_info
@@ -127,69 +140,82 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
     get_issueNo$abattCode <- gsub(" ", "", as.character(get_issueNo$abattCode))
 
     result$get_issueNo <- get_issueNo
-
+  }
 
     ## 품질정보 ----
+    ## First, we check the error msg ----
     quality_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", get_issueNo$issueNo[1], "&issueDate=", get_issueNo$issueDate[1], "&ServiceKey=", key_decoding) %>%
       xmlParse() %>%
-      xmlRoot() %>%
-      getNodeSet("//item") %>%
-      xmlToDataFrame(stringsAsFactors = FALSE) %>%
-      as_tibble() %>%
-      mutate(
-        qgrade = factor(qgrade, levels = c("D", "3", "2", "1", "1+", "1++")),
-        issueDate = ymd(issueDate)
-      )
+      xmlRoot()
 
-    if("costAmt" %in% names(quality_info) == TRUE) {
+    if(xmlToDataFrame(quality_info)$resultCode[1] == 99) {
 
-      quality_info <- quality_info %>%
-        select(
-          cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade,
-          costAmt, weight, rea, backfat, insfat, windex,
-          tissue, yuksak, fatsak, growth, everything()
-        ) %>%
-        mutate(
-          abattDate = lubridate::ymd(abattDate),
-          birthmonth = as.numeric(birthmonth),
-          costAmt = as.integer(costAmt),
-          weight = as.integer(weight),
-          rea = as.integer(rea),
-          backfat = as.integer(backfat),
-          insfat = as.integer(insfat),
-          windex = as.numeric(windex),
-          tissue = as.integer(tissue),
-          yuksak = as.integer(yuksak),
-          fatsak = as.integer(fatsak),
-          growth = as.integer(growth)
-        )
+      quality_info <- xmlToDataFrame(quality_info)$resultMsg[1]
+
     } else {
 
       quality_info <- quality_info %>%
-        select(
-          cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade,
-          weight, rea, backfat, insfat, windex,
-          tissue, yuksak, fatsak, growth, everything()
-        ) %>%
+        getNodeSet("//item") %>%
+        xmlToDataFrame(stringsAsFactors = FALSE) %>%
+        as_tibble() %>%
         mutate(
-          abattDate = lubridate::ymd(abattDate),
-          birthmonth = as.numeric(birthmonth),
-          weight = as.integer(weight),
-          rea = as.integer(rea),
-          backfat = as.integer(backfat),
-          insfat = as.integer(insfat),
-          windex = as.numeric(windex),
-          tissue = as.integer(tissue),
-          yuksak = as.integer(yuksak),
-          fatsak = as.integer(fatsak),
-          growth = as.integer(growth)
+          qgrade = factor(qgrade, levels = c("D", "3", "2", "1", "1+", "1++")),
+          issueDate = ymd(issueDate)
         )
+
+
+      if("costAmt" %in% names(quality_info) == TRUE) {
+
+        quality_info <- quality_info %>%
+          select(
+            cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade,
+            costAmt, weight, rea, backfat, insfat, windex,
+            tissue, yuksak, fatsak, growth, everything()
+          ) %>%
+          mutate(
+            abattDate = lubridate::ymd(abattDate),
+            birthmonth = as.numeric(birthmonth),
+            costAmt = as.integer(costAmt),
+            weight = as.integer(weight),
+            rea = as.integer(rea),
+            backfat = as.integer(backfat),
+            insfat = as.integer(insfat),
+            windex = as.numeric(windex),
+            tissue = as.integer(tissue),
+            yuksak = as.integer(yuksak),
+            fatsak = as.integer(fatsak),
+            growth = as.integer(growth)
+          )
+
+      } else {
+
+        quality_info <- quality_info %>%
+          select(
+            cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade,
+            weight, rea, backfat, insfat, windex,
+            tissue, yuksak, fatsak, growth, everything()
+          ) %>%
+          mutate(
+            abattDate = lubridate::ymd(abattDate),
+            birthmonth = as.numeric(birthmonth),
+            costAmt = NA,
+            weight = as.integer(weight),
+            rea = as.integer(rea),
+            backfat = as.integer(backfat),
+            insfat = as.integer(insfat),
+            windex = as.numeric(windex),
+            tissue = as.integer(tissue),
+            yuksak = as.integer(yuksak),
+            fatsak = as.integer(fatsak),
+            growth = as.integer(growth)
+          )
+
+      }
 
     }
 
-
+    # assign the beef quality results into list ----
     result$quality_info <- quality_info
-  }
 
 
   ## return ----
