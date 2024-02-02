@@ -6,7 +6,7 @@ library(dplyr)
 
 names(hanwoo::hanwoo_kpn)
 
-hanwoo_kpn <- readxl::read_excel("kpn-nias-2308.xlsx") %>%
+hanwoo_kpn <- readxl::read_excel("data-raw/hanwoo_kpn/kpn-nias-2402.xlsx") %>%
   janitor::clean_names(case = "lower_camel", ascii = FALSE)
 
 glimpse(hanwoo::hanwoo_kpn)
@@ -15,6 +15,9 @@ glimpse(hanwoo_kpn)
 ncol(hanwoo::hanwoo_kpn)
 ncol(hanwoo_kpn)
 
+tail(hanwoo::hanwoo_kpn)
+tail(hanwoo_kpn)
+
 data.frame(
   old = names(hanwoo::hanwoo_kpn),
   new = names(hanwoo_kpn)
@@ -22,7 +25,8 @@ data.frame(
   mutate(
     diff = ifelse(old == new, TRUE, FALSE)
   ) %>%
-  filter(diff == FALSE) %>% View()
+  # filter(diff == FALSE) %>%
+  pull(diff) %>% table()
 
 names(hanwoo::hanwoo_kpn)
 names(hanwoo_kpn)
