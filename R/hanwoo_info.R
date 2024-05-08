@@ -4,6 +4,7 @@
 #' @param cattle Number of cattle you get the inform.
 #' @param key_encoding Encoded API key from data.go.kr.
 #' @param key_decoding Decoded API key from data.go.kr.
+#' @param time_check Check the response time of the server.
 #' @keywords Hanwoo
 #' @export
 #' @import XML
@@ -15,7 +16,13 @@
 #' hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
 #' hanwoo_info(cattle = "002115280512", key_encoding, key_decoding)
 
-hanwoo_info <- function(cattle, key_encoding, key_decoding) {
+hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) {
+  # time check point ----
+  if(time_check == TRUE) {
+    start_time <- Sys.time()
+  }
+
+  # result ----
   result <- list()
 
   # check the nchar of cattle number ----
@@ -214,9 +221,15 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding) {
 
     }
 
-    # assign the beef quality results into list ----
-    result$quality_info <- quality_info
+  # assign the beef quality results into list ----
+  result$quality_info <- quality_info
 
+
+  # time check ----
+  if(time_check == TRUE) {
+    time_check <- paste0("Server Respond Time: ", Sys.time() - start_time)
+    print(time_check)
+  }
 
   ## return ----
   return(
