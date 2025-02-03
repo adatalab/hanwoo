@@ -1,0 +1,218 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+
+library(hanwoo)
+```
+
+# hanwoo <img src="man/figures/logo.png" align="right" />
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+A system for modeling the nutrient requirement of *Hanwoo*.
+
+## Overview
+
+한우와 관련된 데이터 분석을 위한 패키지입니다. 한국가축사양표준에 따른 모델 정보를 제공합니다. 또한 공공데이터 API로 제공하는 한우의 기본정보, 도체정보 및 KPN 씨수소 등 다양한 정보를 R로 importing 해올 수 있는 함수를 제공합다.  
+
+## Installation
+
+```r
+# install.packages("remotes")
+remotes::install_github("adatalab/hanwoo")
+```
+
+## Usage
+```r
+library(hanwoo)
+```
+
+### 영양소 요구량 함수
+
+#### req\_\*
+
+체중(bw; body weight)과 일당증체(dg; daily gain)에 따른 한우의 영양소 요구량을 데이터프레임 형식으로 제공합니다.
+
+```{r}
+req_steer(bw = 150, dg = 0.8) # 거세우의 영양소 요구량
+
+req_bull(bw = 200, dg = 1.0) # 거세하지 않은 숫소의 영양소 요구량
+```
+
+여러 구간의 요구량을 한번에 importing 해야 할 경우 다음과 같이 응용할 수 있습니다.
+
+```{r message=FALSE}
+library(purrr)
+library(dplyr)
+
+df <- data.frame(
+  month = 6:15,
+  체중 = c(160, 184, 208, 233, 258, 284, 310, 337, 366, 395),
+  일당증체 = c(0.8, 0.8, 0.8, 0.9, 0.9, 0.9, 0.9, 1, 1, 1)
+)
+
+req <- map2(df$체중, df$일당증체, req_steer)
+
+req %>%
+  map_df(as_tibble)
+```
+
+#### steer\_\*
+
+거세우의 개월령(month), 체고(height), 체장(length) 및 흉위(chest) 길이(cm)를 이용해 체중(kg)을 예측하는 모델입니다. `stats::predict` 함수를 이용하여 라이브러리에 내장 모델을 사용할 수 있습니다.
+
+```{r}
+predict(
+  steer_h,
+  data.frame(height = 100:140)
+)
+
+predict(
+  steer_c,
+  data.frame(chest = 125:230)
+)
+
+predict(
+  steer_m,
+  data.frame(month = 10:30)
+)
+```
+
+### 이력 및 품질 API 연동 함수
+
+본 함수들을 사용하기 위해서는 먼저 [공공데이터포털](data.go.kr)에서 회원가입 및 목적에 따라 1) 축산물등급판정정보 2) 축산물통합이력정보 3) 축산물경락가격정보 및 4) 축산물등급판정확인서발급정보에 대한 각각의 계정신청 및 API key를 발급받아야합니다. 발급받은 api key 는 key_encoding 및 key_decoding에 지정해 줍니다. 발급 후 승인까지 수 시간이 소요될 수 있습니다.
+
+#### hanwoo_info
+
+특정 한우 개체번호를 입력하여 정보를 리스트 형태로 가져올 수 있습니다.
+
+```r
+hanwoo_info(cattle = "002083191603", key_encoding = "your_encoded_api_key", key_decoding = "your_decoded_api_key")
+hanwoo_info(cattle = "002083191603", key_encoding = "your_encoded_api_key", key_decoding = "your_decoded_api_key")
+```
+
+여러마리의 데이터를 importing 해야 할 경우 다음과 같이 응용할 수 있습니다.
+
+```r
+code <- c("002070021011", "002065029272", "002062250044", "002063227367", "002066994812", "002067050894", "002064505530", "002070394423", "002064488463", "002064501114", "002121614931")
+
+get_hanwoo <- function(x) {
+  return(
+    tryCatch(hanwoo_info(x, key_encoding, key_decoding)$quality_info, 
+             error = function(e) NULL
+    )
+  )
+} 
+
+library(purrr)
+library(pbapply)
+
+multiple_result <- purrr::map(code, get_hanwoo)
+# OR (for display a progress bar)
+multiple_result <- pbapply::pblapply(code, get_hanwoo)
+
+multiple_result %>% map_df(as_tibble)
+```
+
+#### hanwoo_bull
+
+KPN 한우 씨수소의 유전정보를 importing 할 수 있습니다. **API key를 요구하지 않습니다**. 보증 및 후보씨수소 목록은 농협경제지주 [한우개량사업소](http://www.limc.co.kr/KpnInfo/KpnList.asp)에서 확인하실 수 있습니다. 한우보증씨수소의 경우 1년에 2회 육종가 평가를 하기 때문에 같은 개체라도 평가 시기에 따라 육종가 다를 수 있습니다.
+
+```r
+hanwoo_bull(KPN = 1080, type = "list")
+hanwoo_bull(KPN = 950, type = "selected")
+```
+
+여러 KPN 데이터를 importing 해야 할 경우 다음과 같이 응용할 수 있습니다.
+```r
+kpn <- 600:1100
+
+get_bull <- function(x) {
+  return(
+    tryCatch(hanwoo_bull(x, type = "selected"), 
+             error = function(e) NULL
+    )
+  )
+}
+
+result <- map(kpn, get_bull)
+result %>% map_df(as_tibble)
+```
+
+#### hanwoo_stock
+한우와 관련된 시세를 조회할 수 있습니다. 데이터는 축산물품질평가원 [축산유통정보](https://www.ekapepia.com/priceStat/distrPriceBeef.do)에서 제공되는 데이터를 기반으로 자체 DB에서 관리되며 1주일에 한번 업데이트 됩니다. Google OAuth access credentials 인증이 필요합니다.
+
+```{r message=FALSE}
+stock <- hanwoo_stock()
+```
+
+```{r}
+head(stock)
+```
+
+
+#### hanwoo_price
+주요 도축장 별로 한육우의 낙찰가를 조회할 수 있습니다. 공공데이터에포탈에서는 최근 1주간의 데이터만 제공됩니다.
+
+```r
+hanwoo_price(date = "", type = "df", key_encoding)
+hanwoo_price(date = "2020-11-10", type = "list", key_encoding)
+```
+
+### 기타 함수
+
+#### hanwoo_qrcode
+
+개체번호 기반 축산물이력제 또는 종축개량협회 링크와 연결되는 QR코드 이미지를 생성합니다.
+
+```{r out.width="30%"}
+hanwoo_qrcode(cattle = "002095123103", site = "mtrace")
+```
+
+
+### 내장 데이터셋
+
+#### hanwoo_kpn
+
+농촌진흥청에서 제공하는 한우 씨수소(Korean Proven Bull) 의 [유전능력평가결과](https://www.nias.go.kr/front/prboardView.do?cmCode=M090814150801285&boardSeqNum=2482) dataset입니다.
+
+```{r}
+tail(hanwoo_kpn)
+```
+
+#### weight_ku1 & weight_ku2
+
+한우를 대상으로 건국대학교에서 수행한 연구(Na, 2017)의 월령별 체중 raw dataset입니다.
+
+```{r}
+weight_ku1
+weight_ku2
+```
+
+#### program_nias
+
+한우사양표준에서 제공하는 3단계/4단계 사양 프로그램표 dataset입니다.
+
+```{r}
+program_nias
+```
+
+<img src="man/figures/main.png">
+
+Getting helps
+-------------
+
+For help or issues using `hanwoo`, please submit a [GitHub issue](https://github.com/adatalab/hanwoo/issues).
+
+For personal communication related to `hanwoo`, please contact Youngjun Na (`ruminoreticulum@gmail.com`).
