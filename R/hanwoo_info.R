@@ -69,8 +69,11 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     xmlRoot() %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
-    as_tibble() %>%
-    mutate(butcheryYmd = ymd(butcheryYmd))
+    as_tibble()
+
+  if(nrow(butchery_info) > 0) {
+    butchery_info <- butchery_info %>% mutate(butcheryYmd = ymd(butcheryYmd))
+  }
 
   process_info <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 4) %>%
     xmlParse() %>%
