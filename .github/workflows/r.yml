@@ -39,7 +39,18 @@ jobs:
 
       - name: Upload check results if there are any
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: R-CMD-check-logs
           path: R-CMD-check*.log
+
+      - name: check-r-package
+        uses: SiyaoIsHiding/R_GA_GSOC@0.0.8
+        with:
+          args: "--no-manual --as-cran"
+          build_args: "--no-manual"
+          error-on: "warning"
+          check-dir: "check"
+          working-directory: "."
+          upload-snapshots: true
+          upload-results: true
