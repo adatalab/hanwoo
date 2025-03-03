@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload check results if there are any
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: R-CMD-check-logs
           path: R-CMD-check*.log
