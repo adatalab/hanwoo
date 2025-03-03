@@ -1,0 +1,45 @@
+name: R-CMD-check
+
+on: [push, pull_request]
+
+jobs:
+  R-CMD-check:
+    runs-on: ubuntu-latest
+    name: R-CMD-check
+    strategy:
+      matrix:
+        config:
+          - {os: ubuntu-latest, r: 'release'}
+          - {os: ubuntu-latest, r: 'devel'}
+          - {os: macOS-latest, r: 'release'}
+          - {os: windows-latest, r: 'release'}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.config.r }}
+
+      - name: Install dependencies
+        run: |
+          install.packages('remotes')
+          remotes::install_deps(dependencies = TRUE)
+
+      - name: Session info
+        run: |
+          sessionInfo()
+
+      - name: Check
+        run: |
+          R CMD check --no-manual --as-cran
+
+      - name: Upload check results if there are any
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: R-CMD-check-logs
+          path: R-CMD-check*.log
