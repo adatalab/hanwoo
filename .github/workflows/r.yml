@@ -1,45 +1,20 @@
-name: R-CMD-check
-
-on: [push, pull_request]
-
-jobs:
-  R-CMD-check:
-    runs-on: ubuntu-latest
-    name: R-CMD-check
-    strategy:
-      matrix:
-        config:
-          - {os: ubuntu-latest, r: 'release'}
-          - {os: ubuntu-latest, r: 'devel'}
-          - {os: macOS-latest, r: 'release'}
-          - {os: windows-latest, r: 'release'}
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-        with:
-          r-version: ${{ matrix.config.r }}
-
-      - name: Install dependencies
-        run: |
-          install.packages('remotes')
-          remotes::install_deps(dependencies = TRUE)
-
-      - name: Session info
-        run: |
-          sessionInfo()
-
-      - name: Check
-        run: |
-          R CMD check --no-manual --as-cran
-
-      - name: Upload check results if there are any
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: R-CMD-check-logs
-          path: R-CMD-check*.log
+            - name: check-r-package
+  # You may pin to the exact commit or the version.
+  # uses: SiyaoIsHiding/R_GA_GSOC@f4b586796236bf9973ae04fd3cc8161cec32f345
+  uses: SiyaoIsHiding/R_GA_GSOC@0.0.8
+  with:
+    # Arguments to pass to the `args` parameter of rcmdcheck. Must be an R expression. Note that it often needs to be quoted in YAML, see the README for details.
+    args: # optional, default is c("--no-manual", "--as-cran")
+    # Arguments to pass to the `build_args` parameter of rcmdcheck. Note that it often needs to be quoted in YAML, see the README for details.
+    build_args: # optional, default is "--no-manual"
+    # What type of result should cause a build error? Note that it often needs to be quoted in YAML, see the README for details.
+    error-on: # optional, default is "warning"
+    # Where should the check output go? Note that it often needs to be quoted in YAML, see the README for details.
+    check-dir: # optional, default is "check"
+    # Using the working-directory keyword, you can specify the working directory of where "rcmdcheck::rcmdcheck" is run.
+    working-directory: # optional, default is .
+    # Whether to upload all testthat snapshots as an artifact.
+    upload-snapshots: # optional
+    # Whether to upload check results for successful runs too.
+    upload-results: # optional
+          
