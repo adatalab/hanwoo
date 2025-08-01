@@ -7,7 +7,7 @@
 hanwoo_info(cattle, key_encoding, key_decoding, time_check = FALSE)
 }
 \arguments{
-\item{cattle}{Number of cattle you get the inform.}
+\item{cattle}{Number of cattle to get the information for.}
 
 \item{key_encoding}{Encoded API key from data.go.kr.}
 
@@ -16,7 +16,7 @@ hanwoo_info(cattle, key_encoding, key_decoding, time_check = FALSE)
 \item{time_check}{Check the response time of the server.}
 }
 \description{
-This function scrap the information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
+This function scrapes the information of Hanwoo from data.go.kr. Please get your API key and request for application at data.go.kr.
 }
 \examples{
 hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
