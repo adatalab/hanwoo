@@ -21,9 +21,9 @@ for (i in seq_along(cattle_ids)) {
 ```r
 # Use purrr::map with error handling for cleaner code
 library(purrr)
-library(furrr)
 
-# Option 1: Sequential with progress bar
+# Option 1: Sequential with progress bar (requires pbapply package)
+# install.packages("pbapply")
 library(pbapply)
 results <- pblapply(cattle_ids, function(x) {
   tryCatch(
@@ -32,7 +32,9 @@ results <- pblapply(cattle_ids, function(x) {
   )
 })
 
-# Option 2: Parallel processing (use with caution to avoid API rate limits)
+# Option 2: Parallel processing with furrr (use with caution to avoid API rate limits)
+# install.packages("furrr")
+library(furrr)
 plan(multisession, workers = 4)  # Adjust workers based on API limits
 results <- future_map(cattle_ids, function(x) {
   tryCatch(
