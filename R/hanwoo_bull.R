@@ -55,6 +55,6 @@ hanwoo_bull <- function(KPN, type = "list") {
   }
 
   if(type == "selected") {
-    return(df$EVB_selected)
+    return(df$EPD)
   }
 }

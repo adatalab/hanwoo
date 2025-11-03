@@ -47,9 +47,12 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
       }
     )
   }
+  
+  # Base URL pattern for traceNoSearch API to reduce string concatenation
+  base_url <- paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=")
 
   # 기본 정보 파싱 및 오류 확인
-  basic_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 1))
+  basic_info <- safe_xml_parse(paste0(base_url, 1))
   if (is.null(basic_info) || xmlToDataFrame(basic_info)$resultCode[1] == 99) {
     return(xmlToDataFrame(basic_info)$resultMsg[1])
   }
@@ -62,7 +65,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     mutate(birthYmd = ymd(birthYmd))
 
   # 농장 정보 추출 및 처리
-  farm_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 2)) %>%
+  farm_info <- safe_xml_parse(paste0(base_url, 2)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble() %>%
@@ -70,7 +73,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     select(cattleNo, everything())
 
   # 도축 정보 추출 및 처리
-  butchery_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 3)) %>%
+  butchery_info <- safe_xml_parse(paste0(base_url, 3)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
@@ -79,26 +82,26 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
   }
 
   # 가공 정보 추출 및 처리
-  process_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 4)) %>%
+  process_info <- safe_xml_parse(paste0(base_url, 4)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
   # 백신 정보 추출 및 처리
-  vaccine_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 5)) %>%
+  vaccine_info <- safe_xml_parse(paste0(base_url, 5)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble() %>%
     mutate(injectionYmd = ymd(injectionYmd))
 
   # 검사 정보 추출 및 처리
-  inspect_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 6)) %>%
+  inspect_info <- safe_xml_parse(paste0(base_url, 6)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
   # 브루셀라 정보 추출 및 처리
-  brucella_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 7)) %>%
+  brucella_info <- safe_xml_parse(paste0(base_url, 7)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
@@ -107,13 +110,13 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
   }
 
   # 로트 정보 추출 및 처리
-  lot_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 8)) %>%
+  lot_info <- safe_xml_parse(paste0(base_url, 8)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
   # 판매자 정보 추출 및 처리
-  seller_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 9)) %>%
+  seller_info <- safe_xml_parse(paste0(base_url, 9)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
@@ -159,13 +162,15 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
         quality_info[[col]] <- NA
       }
 
-      quality_info <- quality_info %>% add_row(quality_info_add) %>%
+      # Add new row and perform type conversions once
+      quality_info <- quality_info %>% 
+        add_row(quality_info_add) %>%
         mutate(
           qgrade = factor(qgrade, levels = c("D", "3", "2", "1", "1+", "1++")),
           issueDate = ymd(issueDate),
           abattDate = lubridate::ymd(abattDate),
           birthmonth = as.numeric(birthmonth),
-          costAmt = as.integer(costAmt),
+          costAmt = if("costAmt" %in% names(.)) as.integer(costAmt) else NA_integer_,
           weight = as.integer(weight),
           rea = as.integer(rea),
           backfat = as.integer(backfat),
@@ -175,43 +180,17 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
           yuksak = as.integer(yuksak),
           fatsak = as.integer(fatsak),
           growth = as.integer(growth)
-        )
+        ) %>%
+        filter(!is.na(cattleNo))
+      
+      # Reorder columns based on whether costAmt exists
       if ("costAmt" %in% names(quality_info)) {
         quality_info <- quality_info %>%
-          select(cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade, costAmt, weight, rea, backfat, insfat, windex, tissue, yuksak, fatsak, growth, everything()) %>%
-          mutate(
-            abattDate = lubridate::ymd(abattDate),
-            birthmonth = as.numeric(birthmonth),
-            costAmt = as.integer(costAmt),
-            weight = as.integer(weight),
-            rea = as.integer(rea),
-            backfat = as.integer(backfat),
-            insfat = as.integer(insfat),
-            windex = as.numeric(windex),
-            tissue = as.integer(tissue),
-            yuksak = as.integer(yuksak),
-            fatsak = as.integer(fatsak),
-            growth = as.integer(growth)
-          )
+          select(cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade, costAmt, weight, rea, backfat, insfat, windex, tissue, yuksak, fatsak, growth, everything())
       } else {
         quality_info <- quality_info %>%
-          select(cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade, weight, rea, backfat, insfat, windex, tissue, yuksak, fatsak, growth, everything()) %>%
-          mutate(
-            abattDate = lubridate::ymd(abattDate),
-            birthmonth = as.numeric(birthmonth),
-            costAmt = NA,
-            weight = as.integer(weight),
-            rea = as.integer(rea),
-            backfat = as.integer(backfat),
-            insfat = as.integer(insfat),
-            windex = as.numeric(windex),
-            tissue = as.integer(tissue),
-            yuksak = as.integer(yuksak),
-            fatsak = as.integer(fatsak),
-            growth = as.integer(growth)
-          )
+          select(cattleNo, abattDate, judgeSexNm, birthmonth, qgrade, wgrade, weight, rea, backfat, insfat, windex, tissue, yuksak, fatsak, growth, everything())
       }
-      quality_info <- quality_info %>% filter(!is.na(cattleNo))
     }
   }
 
