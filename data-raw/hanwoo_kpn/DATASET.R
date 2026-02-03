@@ -6,7 +6,7 @@ library(dplyr)
 
 names(hanwoo::hanwoo_kpn)
 
-hanwoo_kpn <- readxl::read_excel("data-raw/hanwoo_kpn/kpn-nias-2508.xlsx", skip = 0) %>%
+hanwoo_kpn <- readxl::read_excel("data-raw/hanwoo_kpn/kpn-nias-2602.xlsx", skip = 0) %>%
   janitor::clean_names(case = "lower_camel", ascii = FALSE)
 
 glimpse(hanwoo::hanwoo_kpn)
