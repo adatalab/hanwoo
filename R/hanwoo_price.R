@@ -49,10 +49,18 @@ hanwoo_price <- function(date = "", type = "df", key_encoding) {
       xmlfile <- xmlParse(url)
       xmltop <- xmlRoot(xmlfile)
       get_inform <- xmlToDataFrame(getNodeSet(xmlfile, "//item"), stringsAsFactors = FALSE)
+      
+      # Early return for empty results to avoid unnecessary processing
+      if (nrow(get_inform) == 0) {
+        return(NULL)
+      }
 
       return(get_inform)
     }
   )
+  
+  # Remove NULL entries from result
+  result <- result[!sapply(result, is.null)]
 
   ## fill informs ----
   if (type == "list" | type == 1) {
@@ -93,6 +101,11 @@ hanwoo_price <- function(date = "", type = "df", key_encoding) {
     # colnames(df) <- order
     # df <- plyr::rbind.fill(df, plyr::ldply(result, data.frame)) %>% as_tibble()
     df <- as_tibble(bind_rows(result))
+    
+    # Early return if no data
+    if (nrow(df) == 0) {
+      return(NULL)
+    }
 
     num <- c(
       "totalAuctAmt",
