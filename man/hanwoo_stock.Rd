@@ -4,10 +4,10 @@
 \alias{hanwoo_stock}
 \title{hanwoo_stock}
 \usage{
-hanwoo_stock(by = "summary")
+hanwoo_stock()
 }
 \description{
-This function get the stock calf and beef price of hanwoo. Data from ekapepia.com. It needs the Google OAuth access credentials.
+This function get the stock calf and beef price of hanwoo. Data from ekapepia.com.
 }
 \examples{
 hanwoo_stock()
