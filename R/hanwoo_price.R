@@ -2,6 +2,8 @@
 #'
 #' This function scrap the real-time (within 5 days) price information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 #' @param date date you get the inform. e.g. 20190510
+#' @param type Output type: "list" returns a list by market, "df" returns a combined data frame.
+#' @param key_encoding Encoded API key from data.go.kr.
 #' @keywords Hanwoo
 #' @export
 #' @import XML
@@ -9,8 +11,10 @@
 #' @import tibble
 
 #' @examples
+#' \dontrun{
 #' hanwoo_price(date = "", type = "list")
 #' hanwoo_price(date = "20190510", type = "df")
+#' }
 #' @format
 #' \describe{
 #'   \item{auctDate}{Auction date}

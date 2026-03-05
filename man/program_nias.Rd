@@ -16,7 +16,7 @@ A data frame with 24 rows and 10 variables
   \item{max.git}{Maximum growth stage for gastro intestinal tract}
   \item{max.muscle}{Maximum growth stage for muscle}
   \item{max.weight}{Maximum growth stage for body weight}
-  \item{max.fat}{Maximum growth stage for intra-muscular fat}
+  \item{max.int.fat}{Maximum growth stage for intra-muscular fat}
 }
 }
 \usage{

@@ -15,6 +15,8 @@ hanwoo_qrcode(cattle, site = "mtrace")
 This function generate the QR code
 }
 \examples{
+\dontrun{
 hanwoo_qrcode(cattle = "002095123103", site = "mtrace")
 hanwoo_qrcode(cattle = "002095123103", site = "aiak")
+}
 }

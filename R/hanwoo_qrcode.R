@@ -6,8 +6,10 @@
 #' @import qrcode
 #' @export
 #' @examples
+#' \dontrun{
 #' hanwoo_qrcode(cattle = "002095123103", site = "mtrace")
 #' hanwoo_qrcode(cattle = "002095123103", site = "aiak")
+#' }
 
 hanwoo_qrcode <- function(cattle, site = "mtrace") {
 

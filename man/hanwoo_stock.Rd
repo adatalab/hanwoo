@@ -10,6 +10,8 @@ hanwoo_stock()
 This function get the stock calf and beef price of hanwoo. Data from ekapepia.com.
 }
 \examples{
+\dontrun{
 hanwoo_stock()
+}
 }
 \keyword{Hanwoo}

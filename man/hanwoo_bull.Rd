@@ -15,8 +15,10 @@ hanwoo_bull(KPN, type = "list")
 This function scraping the bull information of Hanwoo from data.go.kr.
 }
 \examples{
+\dontrun{
 hanwoo_bull(KPN = 950)
 hanwoo_bull(KPN = 950, type = "selected")
+}
 }
 \keyword{Hanwoo}
 \keyword{bull}

@@ -37,12 +37,18 @@ hanwoo_price(date = "", type = "df", key_encoding)
 }
 \arguments{
 \item{date}{date you get the inform. e.g. 20190510}
+
+\item{type}{Output type: "list" returns a list by market, "df" returns a combined data frame.}
+
+\item{key_encoding}{Encoded API key from data.go.kr.}
 }
 \description{
 This function scrap the real-time (within 5 days) price information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 }
 \examples{
+\dontrun{
 hanwoo_price(date = "", type = "list")
 hanwoo_price(date = "20190510", type = "df")
+}
 }
 \keyword{Hanwoo}

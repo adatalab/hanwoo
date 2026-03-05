@@ -19,7 +19,9 @@ hanwoo_info(cattle, key_encoding, key_decoding, time_check = FALSE)
 This function scrapes the information of Hanwoo from data.go.kr. Please get your API key and request for application at data.go.kr.
 }
 \examples{
+\dontrun{
 hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
 hanwoo_info(cattle = "002115280512", key_encoding, key_decoding)
+}
 }
 \keyword{Hanwoo}

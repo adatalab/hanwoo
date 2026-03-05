@@ -15,6 +15,67 @@
 #' @format A data frame with 1,599 rows and 134 variables
 "hanwoo_kpn"
 
+#' Hanwoo body weight dataset (set 1).
+#'
+#' A dataset of body weight records for Hanwoo cattle.
+#'
+#' @format A data frame with body weight measurements for Hanwoo cattle
+"hanwoo1"
+
+#' Hanwoo body weight dataset (set 2).
+#'
+#' A dataset of body weight records for Hanwoo cattle.
+#'
+#' @format A data frame with body weight measurements for Hanwoo cattle
+"hanwoo2"
+
+#' Body weight prediction model for Hanwoo steers using chest girth.
+#'
+#' A linear regression model for predicting body weight (kg) from
+#' chest girth (cm) of Hanwoo steers.
+#'
+#' @format An object of class \code{lm}
+#' \describe{
+#'   \item{chest}{Chest girth of the steer, cm}
+#' }
+"steer_c"
+
+#' Body weight prediction model for Hanwoo steers using body height.
+#'
+#' A linear regression model for predicting body weight (kg) from
+#' body height (cm) of Hanwoo steers.
+#'
+#' @format An object of class \code{lm}
+#' \describe{
+#'   \item{height}{Body height of the steer, cm}
+#' }
+"steer_h"
+
+#' Body weight prediction model for Hanwoo steers using age.
+#'
+#' A linear regression model for predicting body weight (kg) from
+#' age in months of Hanwoo steers.
+#'
+#' @format An object of class \code{lm}
+#' \describe{
+#'   \item{month}{Age of the steer, months}
+#' }
+"steer_m"
+
+#' Body weight prediction model for Hanwoo steers using multiple measurements.
+#'
+#' A linear regression model for predicting body weight (kg) from
+#' month (age), body height, body length, and chest girth of Hanwoo steers.
+#'
+#' @format An object of class \code{lm}
+#' \describe{
+#'   \item{month}{Age of the steer, months}
+#'   \item{height}{Body height of the steer, cm}
+#'   \item{length}{Body length of the steer, cm}
+#'   \item{chest}{Chest girth of the steer, cm}
+#' }
+"steer_mhlc"
+
 #' Body weight dataset for the Hanwoo steers in KU farm.
 #'
 #' This dataset contains a subset of the body weight dataset for
@@ -61,7 +122,7 @@
 #'   \item{max.git}{Maximum growth stage for gastro intestinal tract}
 #'   \item{max.muscle}{Maximum growth stage for muscle}
 #'   \item{max.weight}{Maximum growth stage for body weight}
-#'   \item{max.fat}{Maximum growth stage for intra-muscular fat}
+#'   \item{max.int.fat}{Maximum growth stage for intra-muscular fat}
 #' }
 "program_nias"
 

@@ -13,20 +13,22 @@
 #' @import dplyr
 #' @import readr
 #' @examples
+#' \dontrun{
 #' hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)
 #' hanwoo_info(cattle = "002115280512", key_encoding, key_decoding)
+#' }
 
 hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) {
 
-  # 시간 체크 시작 (활성화된 경우)
+  # Start time check (if enabled)
   if(time_check == TRUE) {
     start_time <- Sys.time()
   }
 
-  # 결과 리스트 초기화
+  # Initialize result list
   result <- list()
 
-  # 소 번호의 길이를 확인하여 올바른 길이로 조정
+  # Adjust cattle number to correct length
   if (nchar(cattle) == 10) {
     cattle <- paste0("00", as.character(cattle))
   }
@@ -34,7 +36,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     cattle <- paste0("000", as.character(cattle))
   }
 
-  # XML을 안전하게 파싱하고 오류를 처리하기 위한 함수
+  # Helper function to safely parse XML and handle errors
   safe_xml_parse <- function(url) {
     tryCatch(
       {
@@ -42,26 +44,26 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
         xmlRoot(parsed_xml)
       },
       error = function(e) {
-        message("URL에서 XML 파싱 오류: ", url)
+        message("XML parsing error from URL: ", url)
         return(NULL)
       }
     )
   }
 
-  # 기본 정보 파싱 및 오류 확인
+  # Parse basic info and check for errors
   basic_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 1))
   if (is.null(basic_info) || xmlToDataFrame(basic_info)$resultCode[1] == 99) {
     return(xmlToDataFrame(basic_info)$resultMsg[1])
   }
 
-  # 기본 정보 추출 및 처리
+  # Extract and process basic info
   basic_info <- basic_info %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble() %>%
     mutate(birthYmd = ymd(birthYmd))
 
-  # 농장 정보 추출 및 처리
+  # Extract and process farm info
   farm_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 2)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
@@ -69,7 +71,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     mutate(cattleNo = cattle, regYmd = ymd(regYmd)) %>%
     select(cattleNo, everything())
 
-  # 도축 정보 추출 및 처리
+  # Extract and process butchery info
   butchery_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 3)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
@@ -78,26 +80,26 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     butchery_info <- butchery_info %>% mutate(butcheryYmd = ymd(butcheryYmd))
   }
 
-  # 가공 정보 추출 및 처리
+  # Extract and process processing info
   process_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 4)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
-  # 백신 정보 추출 및 처리
+  # Extract and process vaccine info
   vaccine_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 5)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble() %>%
     mutate(injectionYmd = ymd(injectionYmd))
 
-  # 검사 정보 추출 및 처리
+  # Extract and process inspection info
   inspect_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 6)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
-  # 브루셀라 정보 추출 및 처리
+  # Extract and process brucella info
   brucella_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 7)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
@@ -106,19 +108,19 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     brucella_info <- brucella_info %>% mutate(inspectDt = ymd(inspectDt))
   }
 
-  # 로트 정보 추출 및 처리
+  # Extract and process lot info
   lot_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 8)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
-  # 판매자 정보 추출 및 처리
+  # Extract and process seller info
   seller_info <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/animalTrace/traceNoSearch?ServiceKey=", key_encoding, "&traceNo=", cattle, "&optionNo=", 9)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE) %>%
     as_tibble()
 
-  # 추적 결과를 결과 리스트에 할당
+  # Assign trace results to result list
   result$basic_info <- basic_info
   result$farm_info <- farm_info
   result$butchery_info <- butchery_info
@@ -129,7 +131,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
   result$lot_info <- lot_info
   result$seller_info <- seller_info
 
-  # 발급 번호 정보를 추출 및 처리
+  # Extract and process issue number info
   get_issueNo <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/issueNo?animalNo=", cattle, "&ServiceKey=", key_encoding)) %>%
     getNodeSet("//item") %>%
     xmlToDataFrame(stringsAsFactors = FALSE)
@@ -141,10 +143,10 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     result$get_issueNo <- get_issueNo
   }
 
-  # 품질 정보 tibble 초기화
+  # Initialize quality info tibble
   quality_info <- tibble(cattleNo = NA, abattDate = NA, judgeSexNm = NA, birthmonth = NA, qgrade = NA, wgrade = NA, costAmt = NA, weight = NA, rea = NA, backfat = NA, insfat = NA, windex = NA, tissue = NA, yuksak = NA, fatsak = NA, growth = NA, abattAddr = NA, abattCode = NA, abattFno = NA, abattNm = NA, abattTelNo = NA, gradeCd = NA, gradeNm = NA, issueCnt = NA, issueDate = NA, issueNo = NA, judgeBreedNm = NA, judgeDate = NA, judgeKindCd = NA, judgeKindNm = NA, liveStockNm = NA, raterCode = NA, raterNm = NA, reqAddr = NA, reqComNm = NA, reqRegNo = NA, reqUserNm = NA)
 
-  # 발급 번호가 있는 경우 품질 정보 추출 및 처리
+  # Extract and process quality info if issue number is available
   if (!is.null(get_issueNo) && !is.na(get_issueNo[1, 1])) {
     quality_info_add <- safe_xml_parse(paste0("http://data.ekape.or.kr/openapi-data/service/user/grade/confirm/cattle?issueNo=", get_issueNo$issueNo[1], "&issueDate=", get_issueNo$issueDate[1], "&ServiceKey=", key_decoding))
     if (!is.null(quality_info_add) && xmlToDataFrame(quality_info_add)$resultCode[1] != 99) {
@@ -153,7 +155,7 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
         xmlToDataFrame(stringsAsFactors = FALSE) %>%
         as_tibble()
 
-      # 새로운 컬럼을 기존 tibble에 추가
+      # Add new columns to existing tibble
       new_columns <- setdiff(names(quality_info_add), names(quality_info))
       for (col in new_columns) {
         quality_info[[col]] <- NA
@@ -215,16 +217,16 @@ hanwoo_info <- function(cattle, key_encoding, key_decoding, time_check = FALSE) 
     }
   }
 
-  # 품질 정보를 결과 리스트에 할당
+  # Assign quality info to result list
   result$quality_info <- quality_info
 
-  # 시간 체크가 활성화된 경우 서버 응답 시간 출력
+  # Print server response time if time check is enabled
   if(time_check == TRUE) {
-    time_check <- paste0("서버 응답 시간: ", Sys.time() - start_time)
+    time_check <- paste0("Server response time: ", Sys.time() - start_time)
     print(time_check)
   }
 
-  # 결과 리스트 반환
+  # Return result list
   return(
     tryCatch(
       result,

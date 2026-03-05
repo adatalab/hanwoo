@@ -5,12 +5,15 @@
 #' @export
 #' @import lubridate
 #' @import tibble
+#' @importFrom utils read.csv
 #' @examples
+#' \dontrun{
 #' hanwoo_stock()
+#' }
 
 hanwoo_stock <- function(){
 
-  stock <- # R에서 데이터 읽기
+  stock <- # Read data from URL
       read.csv("https://raw.githubusercontent.com/YoungjunNa/ekape-parsing/main/data_hanwoo_stock/hanwoo-stock.csv") %>%
       tibble() %>%
       mutate(

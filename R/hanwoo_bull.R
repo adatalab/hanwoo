@@ -10,8 +10,10 @@
 #' @import lubridate
 #' @import httr
 #' @examples
+#' \dontrun{
 #' hanwoo_bull(KPN = 950)
 #' hanwoo_bull(KPN = 950, type = "selected")
+#' }
 
 hanwoo_bull <- function(KPN, type = "list") {
 
