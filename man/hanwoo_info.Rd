@@ -15,6 +15,13 @@ hanwoo_info(cattle, key_encoding, key_decoding, time_check = FALSE)
 
 \item{time_check}{Check the response time of the server.}
 }
+\value{
+A list containing:
+  \describe{
+    \item{basic_info}{A tibble with basic cattle information (birth date, breed, sex, etc.)}
+    \item{quality_info}{A tibble with carcass quality information (grade, weight, backfat, etc.)}
+  }
+}
 \description{
 This function scrapes the information of Hanwoo from data.go.kr. Please get your API key and request for application at data.go.kr.
 }

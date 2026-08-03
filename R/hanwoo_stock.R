@@ -6,6 +6,8 @@
 #' @import lubridate
 #' @import tibble
 #' @importFrom utils read.csv
+#' @return A tibble containing Hanwoo stock data with columns: date, price information,
+#'   year, week, and wday (day of week).
 #' @examples
 #' \dontrun{
 #' hanwoo_stock()

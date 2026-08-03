@@ -6,6 +6,10 @@
 \usage{
 hanwoo_stock()
 }
+\value{
+A tibble containing Hanwoo stock data with columns: date, price information,
+  year, week, and wday (day of week).
+}
 \description{
 This function get the stock calf and beef price of hanwoo. Data from ekapepia.com.
 }

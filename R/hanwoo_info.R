@@ -12,6 +12,11 @@
 #' @importFrom lubridate ymd
 #' @import dplyr
 #' @import readr
+#' @return A list containing:
+#'   \describe{
+#'     \item{basic_info}{A tibble with basic cattle information (birth date, breed, sex, etc.)}
+#'     \item{quality_info}{A tibble with carcass quality information (grade, weight, backfat, etc.)}
+#'   }
 #' @examples
 #' \dontrun{
 #' hanwoo_info(cattle = "002083191603", key_encoding, key_decoding)

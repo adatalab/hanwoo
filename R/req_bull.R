@@ -18,6 +18,9 @@
 #'   \item{P}{Phosphorus}
 #'   \item{vit}{Vitamin}
 #' }
+#' @return A tibble with 10 columns containing nutrient requirements:
+#'   sex, BW_kg, ADG_kg, CP_g, ME_Mcal, NEg_Mcal, Ca_g, P_g,
+#'   vitA_1000IU, and vitD_1000IU.
 #' @examples
 #' req_bull(bw = 150, dg = 0.8)
 

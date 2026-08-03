@@ -42,6 +42,13 @@ hanwoo_price(date = "", type = "df", key_encoding)
 
 \item{key_encoding}{Encoded API key from data.go.kr.}
 }
+\value{
+Depending on the type parameter:
+  \describe{
+    \item{list}{A list of data frames, one for each market}
+    \item{df}{A combined tibble with price data from all markets}
+  }
+}
 \description{
 This function scrap the real-time (within 5 days) price information of Hanwoo from data.go.kr. Please get your API key and request for applicate at data.go.kr.
 }

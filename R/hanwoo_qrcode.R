@@ -5,6 +5,7 @@
 #' @param site "mtrace" or "aiak"
 #' @import qrcode
 #' @export
+#' @return Invisibly returns a qr_code object. As a side effect, plots the QR code.
 #' @examples
 #' \dontrun{
 #' hanwoo_qrcode(cattle = "002095123103", site = "mtrace")
