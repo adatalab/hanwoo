@@ -43,6 +43,11 @@
 #'   \item{totalAuctAmt}{Mean price}
 #'   \item{totalAuctCnt}{Mean animal}
 #' }
+#' @return Depending on the type parameter:
+#'   \describe{
+#'     \item{list}{A list of data frames, one for each market}
+#'     \item{df}{A combined tibble with price data from all markets}
+#'   }
 
 hanwoo_price <- function(date = "", type = "df", key_encoding) {
   code <- c("0905", "1301", "0809", "1005", "0302", "1201", "0202", "0320", "0323", "0714", "0513", "0613", "1101")

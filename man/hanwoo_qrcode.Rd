@@ -11,6 +11,9 @@ hanwoo_qrcode(cattle, site = "mtrace")
 
 \item{site}{"mtrace" or "aiak"}
 }
+\value{
+Invisibly returns a qr_code object. As a side effect, plots the QR code.
+}
 \description{
 This function generate the QR code
 }

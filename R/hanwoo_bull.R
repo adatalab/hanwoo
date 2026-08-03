@@ -9,6 +9,12 @@
 #' @import dplyr
 #' @import lubridate
 #' @import httr
+#' @return Depending on the type parameter:
+#'   \describe{
+#'     \item{list}{A list with two elements: 'All' (full information) and 'EPD' (selected EPD values)}
+#'     \item{all}{A tibble with all available bull information}
+#'     \item{selected}{A tibble with selected EPD information (kpn, father, selling, guarantee, birthday, carcass_weight_kg, longissimus_cm, backfat_mm, marbling)}
+#'   }
 #' @examples
 #' \dontrun{
 #' hanwoo_bull(KPN = 950)
@@ -57,6 +63,6 @@ hanwoo_bull <- function(KPN, type = "list") {
   }
 
   if(type == "selected") {
-    return(df$EVB_selected)
+    return(df$EPD)
   }
 }

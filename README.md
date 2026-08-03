@@ -4,6 +4,7 @@
 # hanwoo <img src="man/figures/logo.png" align="right" />
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 A system for modeling the nutrient requirement of *Hanwoo*.
@@ -38,11 +39,10 @@ library(hanwoo)
 ``` r
 req_steer(bw = 150, dg = 0.8) # 거세우의 영양소 요구량
 #> # A tibble: 1 × 12
-#>   sex   BW_kg ADG_kg  CP_g TDN_kg DE_Mcal ME_Mcal NEg_Mcal  Ca_g   P_g vitA_10…¹
-#>   <chr> <dbl>  <dbl> <dbl>  <dbl>   <dbl>   <dbl>    <dbl> <dbl> <dbl>     <dbl>
-#> 1 steer   150    0.8  532.   2.57    11.3    9.28     1.83  25.9  11.8      6.36
-#> # … with 1 more variable: vitD_1000IU <dbl>, and abbreviated variable name
-#> #   ¹​vitA_1000IU
+#>   sex   BW_kg ADG_kg  CP_g TDN_kg DE_Mcal ME_Mcal NEg_Mcal  Ca_g   P_g
+#>   <chr> <dbl>  <dbl> <dbl>  <dbl>   <dbl>   <dbl>    <dbl> <dbl> <dbl>
+#> 1 steer   150    0.8  532.   2.57    11.3    9.28     1.83  25.9  11.8
+#> # ℹ 2 more variables: vitA_1000IU <dbl>, vitD_1000IU <dbl>
 
 req_bull(bw = 200, dg = 1.0) # 거세하지 않은 숫소의 영양소 요구량
 #> # A tibble: 1 × 10
@@ -69,20 +69,19 @@ req <- map2(df$체중, df$일당증체, req_steer)
 req %>%
   map_df(as_tibble)
 #> # A tibble: 10 × 12
-#>    sex   BW_kg ADG_kg  CP_g TDN_kg DE_Mcal ME_Mcal NEg_Mcal  Ca_g   P_g vitA_1…¹
-#>    <chr> <dbl>  <dbl> <dbl>  <dbl>   <dbl>   <dbl>    <dbl> <dbl> <dbl>    <dbl>
-#>  1 steer   160    0.8  540.   2.69    11.9    9.74     1.92  25.9  12.1     6.78
-#>  2 steer   184    0.8  558.   2.99    13.2   10.8      2.13  26.0  12.6     7.80
-#>  3 steer   208    0.8  575.   3.28    14.5   11.9      2.34  26.0  13.2     8.82
-#>  4 steer   233    0.9  625.   3.74    16.5   13.5      2.86  28.4  14.5     9.88
-#>  5 steer   258    0.9  640.   4.03    17.8   14.6      3.09  28.4  15.1    10.9 
-#>  6 steer   284    0.9  655.   4.33    19.1   15.7      3.32  28.4  15.7    12.0 
-#>  7 steer   310    0.9  670.   4.63    20.4   16.7      3.54  28.3  16.3    13.1 
-#>  8 steer   337    1    712.   5.14    22.7   18.6      4.19  30.3  17.5    14.3 
-#>  9 steer   366    1    726.   5.47    24.1   19.8      4.46  30.2  18.2    15.5 
-#> 10 steer   395    1    739.   5.79    25.6   21.0      4.72  30.0  18.8    16.7 
-#> # … with 1 more variable: vitD_1000IU <dbl>, and abbreviated variable name
-#> #   ¹​vitA_1000IU
+#>    sex   BW_kg ADG_kg  CP_g TDN_kg DE_Mcal ME_Mcal NEg_Mcal  Ca_g   P_g
+#>    <chr> <dbl>  <dbl> <dbl>  <dbl>   <dbl>   <dbl>    <dbl> <dbl> <dbl>
+#>  1 steer   160    0.8  540.   2.69    11.9    9.74     1.92  25.9  12.1
+#>  2 steer   184    0.8  558.   2.99    13.2   10.8      2.13  26.0  12.6
+#>  3 steer   208    0.8  575.   3.28    14.5   11.9      2.34  26.0  13.2
+#>  4 steer   233    0.9  625.   3.74    16.5   13.5      2.86  28.4  14.5
+#>  5 steer   258    0.9  640.   4.03    17.8   14.6      3.09  28.4  15.1
+#>  6 steer   284    0.9  655.   4.33    19.1   15.7      3.32  28.4  15.7
+#>  7 steer   310    0.9  670.   4.63    20.4   16.7      3.54  28.3  16.3
+#>  8 steer   337    1    712.   5.14    22.7   18.6      4.19  30.3  17.5
+#>  9 steer   366    1    726.   5.47    24.1   19.8      4.46  30.2  18.2
+#> 10 steer   395    1    739.   5.79    25.6   21.0      4.72  30.0  18.8
+#> # ℹ 2 more variables: vitA_1000IU <dbl>, vitD_1000IU <dbl>
 ```
 
 #### steer\_\*
@@ -156,12 +155,12 @@ predict(
 
 ### 이력 및 품질 API 연동 함수
 
-본 함수들을 사용하기 위해서는 먼저 [공공데이터포털](data.go.kr)에서
-회원가입 및 목적에 따라 1) 축산물등급판정정보 2) 축산물통합이력정보 3)
-축산물경락가격정보 및 4) 축산물등급판정확인서발급정보에 대한 각각의
-계정신청 및 API key를 발급받아야합니다. 발급받은 api key 는 key_encoding
-및 key_decoding에 지정해 줍니다. 발급 후 승인까지 수 시간이 소요될 수
-있습니다.
+본 함수들을 사용하기 위해서는 먼저
+[공공데이터포털](https://data.go.kr)에서 회원가입 및 목적에 따라 1)
+축산물등급판정정보 2) 축산물통합이력정보 3) 축산물경락가격정보 및 4)
+축산물등급판정확인서발급정보에 대한 각각의 계정신청 및 API key를
+발급받아야합니다. 발급받은 api key 는 key_encoding 및 key_decoding에
+지정해 줍니다. 발급 후 승인까지 수 시간이 소요될 수 있습니다.
 
 #### hanwoo_info
 
@@ -235,23 +234,22 @@ result %>% map_df(as_tibble)
 
 ``` r
 stock <- hanwoo_stock()
-#> Data from ekapepia.com; Last updated: 2022-09-28 by Antller Inc.
+#> Data from https://ekapepia.com; Last updated: 2026-07-31 by Antller Inc.
 ```
 
 ``` r
 head(stock)
-#> # A tibble: 6 × 12
-#>   date       명절   암송…¹  숫송…²  농가…³ 지육_…⁴ 지육_…⁵ 도매_…⁶ 소비…⁷  year
-#>   <date>     <chr>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>  <dbl> <dbl>
-#> 1 2022-09-28 <NA>  2861000 4209000 6898000   19257   18507   73757 101640  2022
-#> 2 2022-09-27 <NA>  2861000 4209000 7207000   20121   19246      NA 101580  2022
-#> 3 2022-09-26 <NA>  2851000 4222000 5129000   14320   17678   77377 101610  2022
-#> 4 2022-09-23 <NA>  2835000 4226000 6896000   19252   19279   77377 101550  2022
-#> 5 2022-09-22 <NA>  2835000 4226000 7182000   20050   19572   74400  99930  2022
-#> 6 2022-09-21 <NA>  2847000 4237000 7225000   20170   19595   76045  99810  2022
-#> # … with 2 more variables: week <dbl>, wday <ord>, and abbreviated variable
-#> #   names ¹​암송아지, ²​숫송아지, ³​농가수취가격_600kg, ⁴​지육_평균, ⁵​지육_1등급,
-#> #   ⁶​도매_등심1등급, ⁷​소비자_등심1등급
+#> # A tibble: 6 × 13
+#>   date       명절  암송아지 숫송아지 농가수취가격_600kg 지육_평균 지육_1등급
+#>   <date>     <chr>    <dbl>    <dbl>              <int>     <int>      <int>
+#> 1 2026-07-31 <NA>        NA       NA            7686000     21457      20139
+#> 2 2026-07-30 <NA>   3803000  5103000            7514000     20977      19853
+#> 3 2026-07-29 <NA>   3798000  5110000            7732000     21586      20189
+#> 4 2026-07-28 <NA>   3820000  5134000            7739000     21604      20493
+#> 5 2026-07-27 <NA>   3765000  5094000            6155000     17182      18546
+#> 6 2026-07-24 <NA>        NA       NA            7584000     21173      20057
+#> # ℹ 6 more variables: 도매_등심1등급 <int>, 소비자_등심1등급 <dbl>, year <dbl>,
+#> #   week <dbl>, wday <ord>, 비고 <chr>
 ```
 
 #### hanwoo_price
@@ -275,7 +273,7 @@ hanwoo_price(date = "2020-11-10", type = "list", key_encoding)
 hanwoo_qrcode(cattle = "002095123103", site = "mtrace")
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="30%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="30%" />
 
 ### 내장 데이터셋
 
@@ -287,22 +285,22 @@ dataset입니다.
 
 ``` r
 tail(hanwoo_kpn)
-#> # A tibble: 6 × 141
-#>   kpn      등록번호 근교계수 아비   조부  외조부 x12개…¹ x12개…² 도체…³ 도체중…⁴
-#>   <chr>       <dbl>    <dbl> <chr>  <chr> <chr>    <dbl>   <dbl>  <dbl>    <dbl>
-#> 1 KPN1668 231810911   0.0291 KPN12… KPN1… KPN950    50.4    0.67   58.9     0.57
-#> 2 KPN1669 231758921   0.0118 KPN13… KPN9… KPN10…    48.1    0.64   60.3     0.55
-#> 3 KPN1670 231703218   0.0185 KPN14… KPN1… KPN12…    55.2    0.64   77.3     0.54
-#> 4 KPN1671 231703202   0.0071 KPN12… KPN1… KPN872    55.3    0.66   62.2     0.57
-#> 5 KPN1672 231822768   0.0202 KPN14… KPN1… KPN685    69.2    0.64   77.5     0.55
-#> 6 KPN1673 231830164   0.0146 <NA>   <NA>  <NA>      35.1    0.58   35.6     0.42
-#> # … with 131 more variables: 등심단면적육종가 <dbl>, 등심단면적정확도 <dbl>,
-#> #   등지방두께육종가 <dbl>, 등지방두께정확도 <dbl>, 근내지방도육종가 <dbl>,
-#> #   근내지방도정확도 <dbl>, x12개월체중표준화육종가 <dbl>,
-#> #   도체중표준화육종가 <dbl>, 등심단면적표준화육종가 <dbl>,
-#> #   등지방두께표준화육종가 <dbl>, 근내지방도표준화육종가 <dbl>,
-#> #   x12개월체고육종가 <dbl>, x12개월체고정확도 <dbl>,
-#> #   x12개월십자부고육종가 <dbl>, x12개월십자부고정확도 <dbl>, …
+#> # A tibble: 6 × 111
+#>   kpn   등록번호 근교계수 아비  조부  외조부 x12개월체중육종가 x12개월체중정확도
+#>   <chr> <chr>       <dbl> <chr> <chr> <chr>              <dbl>             <dbl>
+#> 1 KPN1… 3002238…   0.0138 KPN1… KPN1… KPN950              87.2              0.79
+#> 2 KPN1… 2352276…   0.0177 KPN1… KPN1… KPN11…              94.7              0.8 
+#> 3 KPN1… 2352276…   0.0290 KPN1… KPN1… KPN13…              87.6              0.81
+#> 4 KPN1… 2352276…   0.0120 KPN1… KPN9… KPN14…              83.2              0.81
+#> 5 GPN0… 2340581…   0.0185 KPN1… KPN1… KPN10…              68.1              0.84
+#> 6 KGBC… 2352039…   0.0191 KPN1… KPN1… KPN14…              97.5              0.81
+#> # ℹ 103 more variables: 도체중육종가 <dbl>, 도체중정확도 <dbl>,
+#> #   등심단면적육종가 <dbl>, 등심단면적정확도 <dbl>, 등지방두께육종가 <dbl>,
+#> #   등지방두께정확도 <dbl>, 근내지방도육종가 <dbl>, 근내지방도정확도 <dbl>,
+#> #   x12개월체중표준화육종가 <dbl>, 도체중표준화육종가 <dbl>,
+#> #   등심단면적표준화육종가 <dbl>, 등지방두께표준화육종가 <dbl>,
+#> #   근내지방도표준화육종가 <dbl>, x12개월체고육종가 <dbl>,
+#> #   x12개월체고정확도 <dbl>, x12개월십자부고육종가 <dbl>, …
 ```
 
 #### weight_ku1 & weight_ku2
@@ -325,7 +323,7 @@ weight_ku1
 #>  8   1.5 6393     7.6   164.
 #>  9   3   2186     8.3   178 
 #> 10   3   9407     7.6   211 
-#> # … with 86 more rows
+#> # ℹ 86 more rows
 weight_ku2
 #> # A tibble: 780 × 4
 #>    treat animal month weight
@@ -340,7 +338,7 @@ weight_ku2
 #>  8     1 7940    6.69    233
 #>  9     1 7503    6.49    232
 #> 10     1 7002    6.95    222
-#> # … with 770 more rows
+#> # ℹ 770 more rows
 ```
 
 #### program_nias
@@ -350,20 +348,20 @@ weight_ku2
 ``` r
 program_nias
 #> # A tibble: 24 × 10
-#>    stage3      stage4 month weight   adg feed.…¹ max.git max.m…² max.w…³ max.i…⁴
-#>    <chr>       <chr>  <dbl>  <dbl> <dbl> <chr>     <dbl>   <dbl>   <dbl>   <dbl>
-#>  1 growing     growi…     6    160  0.8  6.5           1       0       0       0
-#>  2 growing     growi…     7    184  0.8  7.5           1       0       0       0
-#>  3 growing     growi…     8    208  0.83 8.5           1       0       0       0
-#>  4 growing     growi…     9    233  0.85 9.5           1       0       0       0
-#>  5 growing     growi…    10    258  0.85 10            1       0       0       0
-#>  6 growing     growi…    11    284  0.87 11            1       0       0       0
-#>  7 growing     early…    12    310  0.9  12            1       1       0       0
-#>  8 growing     early…    13    337  0.95 13            0       1       0       0
-#>  9 early-fatt… early…    14    366  0.97 14            0       1       0       0
-#> 10 early-fatt… early…    15    395  1    15            0       1       1       0
-#> # … with 14 more rows, and abbreviated variable names ¹​feed.intake,
-#> #   ²​max.muscle, ³​max.weight, ⁴​max.int.fat
+#>    stage3    stage4 month weight   adg feed.intake max.git max.muscle max.weight
+#>    <chr>     <chr>  <dbl>  <dbl> <dbl> <chr>         <dbl>      <dbl>      <dbl>
+#>  1 growing   growi…     6    160  0.8  6.5               1          0          0
+#>  2 growing   growi…     7    184  0.8  7.5               1          0          0
+#>  3 growing   growi…     8    208  0.83 8.5               1          0          0
+#>  4 growing   growi…     9    233  0.85 9.5               1          0          0
+#>  5 growing   growi…    10    258  0.85 10                1          0          0
+#>  6 growing   growi…    11    284  0.87 11                1          0          0
+#>  7 growing   early…    12    310  0.9  12                1          1          0
+#>  8 growing   early…    13    337  0.95 13                0          1          0
+#>  9 early-fa… early…    14    366  0.97 14                0          1          0
+#> 10 early-fa… early…    15    395  1    15                0          1          1
+#> # ℹ 14 more rows
+#> # ℹ 1 more variable: max.int.fat <dbl>
 ```
 
 <img src="man/figures/main.png">

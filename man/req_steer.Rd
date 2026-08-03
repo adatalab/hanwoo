@@ -23,6 +23,11 @@ req_steer(bw, dg)
 
 \item{dg}{Daily gain}
 }
+\value{
+A tibble with 12 columns containing nutrient requirements:
+  sex, BW_kg, ADG_kg, CP_g, TDN_kg, DE_Mcal, ME_Mcal, NEg_Mcal, Ca_g, P_g,
+  vitA_1000IU, and vitD_1000IU.
+}
 \description{
 Calculate the nutrient requirement of Hanwoo steer.
 }

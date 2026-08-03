@@ -11,6 +11,14 @@ hanwoo_bull(KPN, type = "list")
 
 \item{type}{"list", "all", or "selected"}
 }
+\value{
+Depending on the type parameter:
+  \describe{
+    \item{list}{A list with two elements: 'All' (full information) and 'EPD' (selected EPD values)}
+    \item{all}{A tibble with all available bull information}
+    \item{selected}{A tibble with selected EPD information (kpn, father, selling, guarantee, birthday, carcass_weight_kg, longissimus_cm, backfat_mm, marbling)}
+  }
+}
 \description{
 This function scraping the bull information of Hanwoo from data.go.kr.
 }

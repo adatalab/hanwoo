@@ -4,3 +4,10 @@
 ^README\.Rmd$
 ^\.github$
 ^data/\.Rapp.*$
+^lib$
+^assets$
+^\.Rapp\.history$
+^\.DS_Store$
+^LICENSE\.md$
+^cran-comments\.md$
+^LICENSE$
