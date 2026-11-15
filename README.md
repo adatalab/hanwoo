@@ -252,6 +252,16 @@ head(stock)
 #> #   week <dbl>, wday <ord>, 비고 <chr>
 ```
 
+#### read_kahis
+
+가축질병 발생 정보를 조회할 수 있습니다. 데이터는 농림축산검역본부
+[가축질병위기대응포털(KAHIS)](https://www.kahis.go.kr)에서 제공되는
+데이터를 기반으로 합니다.
+
+``` r
+kahis <- read_kahis()
+```
+
 #### hanwoo_price
 
 주요 도축장 별로 한육우의 낙찰가를 조회할 수 있습니다.
